@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './CWPrompt.css';
 
 const CWPromptStyle = {
   flexGrow: 1
