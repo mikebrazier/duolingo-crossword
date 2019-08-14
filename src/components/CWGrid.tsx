@@ -82,7 +82,7 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
         arr.push({ x: xPoint, y: yPoints[index] })
       );
     }
-    this.setState({ currentlySelected: arr });
+    return arr;
   }
 
   handleMouseUp = () => {
@@ -92,7 +92,6 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
   };
 
   onCWLetterBoxMouseDown = (coords: Coords) => {
-    console.log('startpoint:', coords);
     this.setState({
       selecting: true,
       startPoint: coords,
@@ -102,7 +101,8 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
 
   onCWLetterBoxMouseEnter = (endPoint: Coords) => {
     if (this.state.selecting) {
-      this.findSelectedPoints(this.state.startPoint, endPoint);
+      let arr = this.findSelectedPoints(this.state.startPoint, endPoint);
+      this.setState({ currentlySelected: arr });
     }
   };
 
