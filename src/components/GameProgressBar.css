@@ -1,0 +1,10 @@
+.GameProgressBarPercent::after {
+  background: #fff;
+  border-radius: 98px;
+  content: '';
+  display: block;
+  height: 5px;
+  margin: 0 10px 0 15px;
+  opacity: 0.2;
+  transform: translate3d(0, 4px, 0);
+}
