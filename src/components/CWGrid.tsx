@@ -1,84 +1,145 @@
 import * as React from 'react';
+import './CWGrid.css';
+import CWLetterBox from './CWLetterBox';
+import Coords from './../types/Coords';
+import { CharacterGrid, CharacterGridPoint } from './../types/CharacterGrid';
 
-export interface Props {
-  name: string;
-  enthusiasmLevel?: number;
+export interface CWGridProps {
+  onAnswerSelected: () => void;
+  characterGrid: CharacterGrid;
 }
 
-const character_grid = [
-  ['i', 'q', 'í', 'l', 'n', 'n', 'm', 'ó'],
-  ['f', 't', 'v', 'ñ', 'b', 'm', 'h', 'a'],
-  ['h', 'j', 'é', 't', 'e', 't', 'o', 'z'],
-  ['x', 'á', 'o', 'i', 'e', 'ñ', 'm', 'é'],
-  ['q', 'é', 'i', 'ó', 'q', 's', 'b', 's'],
-  ['c', 'u', 'm', 'y', 'v', 'l', 'r', 'x'],
-  ['ü', 'í', 'ó', 'm', 'o', 't', 'e', 'k'],
-  ['a', 'g', 'r', 'n', 'n', 'ó', 's', 'm']
-];
+interface CWGridState {
+  selecting: boolean;
+  startPoint: Coords;
+  endPoint: Coords;
+  currentlySelected: Array<Coords>;
+}
 
-const CWGridStyle = {
-  maxHeight: '500px',
-  maxWidth: '500px',
-  minHeight: '500px',
-  minWidth: '500px',
-  display: 'flex',
-  alignItems: 'stretch',
-  flexDirection: 'column' as 'column',
-  flexGrow: 1
-};
+function getLinearSequence(start: number, finish: number) {
+  let arr: Array<number> = [];
 
-const CWGridRowStyle = {
-  display: 'flex',
-  flexGrow: 1
-};
+  if (start == finish) {
+    arr.push(start);
+  } else {
+    if (start > finish) {
+      for (let i = start; i >= finish; --i) {
+        arr.push(i);
+      }
+    } else {
+      for (let i = start; i <= finish; ++i) {
+        arr.push(i);
+      }
+    }
+  }
+  return arr;
+}
 
-const CWLetterBoxStyle = {
-  cursor: 'pointer' as 'pointer',
-  fontSize: '19px',
-  lineHeight: '27px',
-  textAlign: 'center' as 'center',
-  borderWidth: '2px 2px 4px',
-  borderStyle: 'solid',
-  borderRadius: '16px',
-  borderColor: '#e5e5e5',
-  flexGrow: 1,
-  position: 'relative' as 'relative',
-  margin: '2px'
-};
+class CWGrid extends React.Component<CWGridProps, CWGridState> {
+  readonly state: CWGridState = {
+    selecting: false,
+    startPoint: { x: 0, y: 0 },
+    endPoint: { x: 0, y: 0 },
+    currentlySelected: []
+  };
 
-const CWLetterBoxCharStyle = {
-  position: 'absolute' as 'absolute',
-  width: '100%',
-  height: '100%',
-  textAlign: 'centpper' as 'center',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: '#4b4b4b'
-};
+  //TODO limit to range of grid
+  findSelectedPoints(start: Coords, end: Coords) {
+    let arr: Array<Coords> = [];
 
-function CWGrid() {
-  return (
-    <div className="CWGrid" style={CWGridStyle}>
-      {character_grid.map((row, rIndex) => (
-        <div className="CWGridRow" key="rIndex" style={CWGridRowStyle}>
-          {row.map((character, cIndex) => (
-            <div className="CWLetterBox" key="index" style={CWLetterBoxStyle}>
-              <div className="CWLetterBoxChar" style={CWLetterBoxCharStyle}>
-                <div>{character}</div>
-              </div>
+    //same point
+    if (end.x == start.x && end.y == start.y) {
+      arr.push({ x: start.x, y: start.y });
+    }
+    //x-axis same
+    else if (end.x == start.x) {
+      let yPoints = getLinearSequence(end.y, start.y);
+      yPoints.forEach(yPoint => arr.push({ x: start.x, y: yPoint }));
+    }
+    //y-axis same
+    else if (start.y == end.y) {
+      let xPoints = getLinearSequence(end.x, start.x);
+      xPoints.forEach(xPoint => arr.push({ x: xPoint, y: start.y }));
+    }
+    //both different
+    else {
+      let xdiff = end.x - start.x;
+      let ydiff = end.y - start.y;
+
+      let magnitude: number;
+
+      let xMag = Math.abs(xdiff);
+      let yMag = Math.abs(ydiff);
+      xMag > yMag ? (magnitude = xMag) : (magnitude = yMag);
+
+      let xnew = start.x + Math.sign(xdiff) * magnitude;
+      let ynew = start.y + Math.sign(ydiff) * magnitude;
+
+      let xPoints = getLinearSequence(start.x, xnew);
+      let yPoints = getLinearSequence(start.y, ynew);
+
+      xPoints.forEach((xPoint, index) =>
+        arr.push({ x: xPoint, y: yPoints[index] })
+      );
+    }
+    this.setState({ currentlySelected: arr });
+  }
+
+  handleMouseUp = () => {
+    console.log('mouse up');
+    this.setState({ selecting: false });
+    // this.setState({ selecting: false, currentlySelected: [] });
+  };
+
+  onCWLetterBoxMouseDown = (coords: Coords) => {
+    console.log('startpoint:', coords);
+    this.setState({
+      selecting: true,
+      startPoint: coords,
+      currentlySelected: [coords]
+    });
+  };
+
+  onCWLetterBoxMouseEnter = (endPoint: Coords) => {
+    if (this.state.selecting) {
+      this.findSelectedPoints(this.state.startPoint, endPoint);
+    }
+  };
+
+  render() {
+    return (
+      <div className="CWGridWrapper">
+        <div className="CWGrid" onMouseUp={this.handleMouseUp}>
+          {this.props.characterGrid.grid.map((row, rIndex) => (
+            <div className="CWGridRow" key={rIndex}>
+              {row.map((cgp: CharacterGridPoint, cIndex) => {
+                let _selected = false;
+                if (
+                  this.state.currentlySelected.some((coord: Coords) => {
+                    return cgp.coords.x == coord.x && cgp.coords.y == coord.y;
+                  })
+                ) {
+                  _selected = true;
+                }
+
+                return (
+                  <CWLetterBox
+                    character={cgp.character}
+                    coords={cgp.coords}
+                    validated={false}
+                    selected={_selected}
+                    onMouseDown={this.onCWLetterBoxMouseDown}
+                    onMouseEnter={this.onCWLetterBoxMouseEnter}
+                    key={cgp.index}
+                  />
+                );
+              })}
             </div>
           ))}
         </div>
-      ))}
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
 export default CWGrid;
-
-// helpers
-
-function getExclamationMarks(numChars: number) {
-  return Array(numChars + 1).join('!');
-}
