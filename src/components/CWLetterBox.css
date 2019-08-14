@@ -1,0 +1,33 @@
+.CWLetterBox {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+  cursor: pointer;
+  font-size: 19px;
+  line-height: 27px;
+  text-align: center;
+  border-width: 2px 2px 4px;
+  border-style: solid;
+  border-radius: 16px;
+  border-color: rgb(229, 229, 229);
+  flex-grow: 1;
+  position: relative;
+  margin: 2px;
+  color: rgb(75, 75, 75);
+  font-size: 19px;
+}
+
+.CWLetterBox.selected {
+  color: #1cb0f6;
+  background-color: #ddf4ff;
+  border-color: #1cb0f6;
+}
+.CWLetterBoxChar {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
