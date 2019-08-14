@@ -1,0 +1,112 @@
+.GameAnswerIndicator {
+  padding: 16px 0 16px 40px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+/*
+ *	GameAnswerCircle
+ */
+
+.GameAnswerCircle {
+  background: #fff;
+  border-radius: 98px;
+  display: inline-block;
+  flex-shrink: 0;
+  float: left;
+  height: 80px;
+  margin-right: 16px;
+  width: 80px;
+}
+
+/*
+ *	GameAnswerIndicatorContent
+ */
+
+.GameAnswerIndicatorContent {
+  flex-grow: 1;
+}
+
+.GameAnswerCircleCheck {
+  display: block;
+  margin: 27px 0 0 20px;
+  background-position: -166px -90px;
+  height: 31px;
+  width: 41px;
+  background-image: url(//d35aaqx5ub95lt.cloudfront.net/images/icon-sprite8.svg);
+  vertical-align: middle;
+}
+
+.GameAnswerIndicatorContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.GameContinueButtonWrapper {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.GameContinueButton {
+  border-color: transparent;
+
+  border-top-left-radius: 18px;
+
+  border-top-right-radius: 18px;
+
+  border-width: 0 0 4px;
+
+  padding: 13px 16px;
+  background-color: #58a700;
+
+  color: #fff;
+  font-size: 17px;
+  min-width: 150px;
+  width: auto;
+  display: inline-block;
+
+  text-align: center;
+
+  vertical-align: middle;
+
+  white-space: nowrap;
+  border-radius: 16px;
+  border-style: solid;
+
+  transform: translateZ(0);
+
+  transition: filter 0.2s;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+
+  text-transform: uppercase;
+}
+
+.GameContinueButton::after {
+  border-color: transparent !important;
+
+  border-width: 0 0 4px;
+
+  bottom: -4px;
+
+  content: '';
+
+  left: 0;
+
+  right: 0;
+
+  top: 0;
+  border-radius: 16px;
+  background-clip: padding-box;
+  background-color: #78c800;
+
+  border-style: solid;
+
+  position: absolute;
+
+  z-index: -1;
+}
