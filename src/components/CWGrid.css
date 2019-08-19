@@ -3,6 +3,10 @@
   justify-content: center;
 }
 
+.CWGrid:hover {
+  cursor: pointer;
+}
+
 .CWGrid {
   max-height: 500px;
   max-width: 500px;
