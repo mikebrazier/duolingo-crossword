@@ -8,7 +8,7 @@ const CWPromptStyle = {
 function CWPrompt() {
   return (
     <div className="CWPrompt" style={CWPromptStyle}>
-      <h1> Find all the translations in Spanish for the word </h1>
+      <h1> Find all the translations from English to Spanish for the word </h1>
     </div>
   );
 }
