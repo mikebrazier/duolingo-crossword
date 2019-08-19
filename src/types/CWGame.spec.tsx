@@ -1,8 +1,8 @@
-import { CWGame, CWRawGameData } from './CWGame';
+import * as CWGame from './CWGame';
 import { CWWord, wordsAreEqual } from './CWWord';
 import { cloneDeep } from 'lodash';
 
-const rawGameData: CWRawGameData = {
+const rawGameData: CWGame.CWRawGameData = {
   source_language: 'en',
   word: 'girl',
   character_grid: [
@@ -34,110 +34,117 @@ const CWGameValidWord2: CWWord = [
   { coord: { x: 4, y: 6 }, c: 'ñ' },
   { coord: { x: 5, y: 6 }, c: 'a' }
 ];
+let TestGameData = CWGame.parseCWRawGameData(rawGameData);
+let TestGame = CWGame.makeCWGame(TestGameData);
 
-const TestGame = CWGame.fromCWRawGameData(rawGameData);
+beforeEach(() => {
+  TestGame.state = CWGame.newGameState();
+});
 
-describe('CWGame', () => {
+describe('parseCWRawGameData', () => {
   it('should throw error on ill-formatted data', () => {
     let badData: any = cloneDeep(rawGameData);
     badData.word_locations['1'] = 'coordinatesMustBeTwoDimensional';
-    let badGameData: CWRawGameData = badData;
+    let badGameData: CWGame.CWRawGameData = badData;
     let makeBadGame = () => {
-      CWGame.fromCWRawGameData(badGameData);
+      CWGame.parseCWRawGameData(badGameData);
     };
     expect(makeBadGame).toThrow('invalid game data');
   });
 
   it('should not throw error on not ill-formatted data', () => {
     let makeGoodGame = () => {
-      CWGame.fromCWRawGameData(rawGameData);
+      CWGame.parseCWRawGameData(rawGameData);
     };
     expect(makeGoodGame).not.toThrow('invalid game data');
   });
+});
 
+describe('wordIsValid', () => {
   it('should return false when no valid words', () => {
-    let noValidWords: CWRawGameData = cloneDeep(rawGameData);
+    let noValidWords: CWGame.CWRawGameData = cloneDeep(rawGameData);
     noValidWords.word_locations = [];
-    let noValidWordsGame = CWGame.fromCWRawGameData(noValidWords);
-    expect(noValidWordsGame.wordIsValid(CWGameValidWord1)).toBeFalsy();
+    let noValidWordsGame = CWGame.makeCWGame(
+      CWGame.parseCWRawGameData(noValidWords)
+    );
+    expect(
+      CWGame.wordIsValid(noValidWordsGame.gameData, CWGameValidWord1)
+    ).toBeFalsy();
   });
 
   it('should return false when words are not same length', () => {
     let duplicateCoords: CWWord = cloneDeep(CWGameValidWord1);
     duplicateCoords.push(duplicateCoords[0]);
-    expect(TestGame.wordIsValid(duplicateCoords)).toBeFalsy();
+    expect(CWGame.wordIsValid(TestGame.gameData, duplicateCoords)).toBeFalsy();
   });
 
   it('should return true when word is valid', () => {
-    let game = CWGame.fromCWRawGameData(rawGameData);
-    expect(game.wordIsValid(CWGameValidWord1)).toBeTruthy();
+    expect(
+      CWGame.wordIsValid(TestGame.gameData, CWGameValidWord1)
+    ).toBeTruthy();
   });
+});
 
+describe('CWGame', () => {
   it('should set selected word', () => {
-    let game = CWGame.fromCWRawGameData(rawGameData);
-    game.setSelectedWord(CWGameValidWord1);
-    expect(game.getSelectedWord()).toEqual(CWGameValidWord1);
+    TestGame.state.selectedWord = CWGameValidWord1;
+    expect(TestGame.state.selectedWord).toEqual(CWGameValidWord1);
   });
 
   it('should update found words on valid word', () => {
-    let game = CWGame.fromCWRawGameData(rawGameData);
-    expect(game.getWordsFound().length).toBeFalsy();
-    game.setSelectedWord(CWGameValidWord1);
-    game.checkSelectedWord(); //word now found
-    expect(game.getCheckedWordCorrect()).toBeTruthy();
+    expect(TestGame.state.foundWords.length).toBeFalsy();
+    TestGame.state.selectedWord = CWGameValidWord1;
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
+    expect(TestGame.state.currentAnswerCorrect).toBeTruthy();
     expect(
-      wordsAreEqual(CWGameValidWord1, game.getWordsFound()[0])
+      wordsAreEqual(CWGameValidWord1, TestGame.state.foundWords[0])
     ).toBeTruthy();
   });
 
   it('should set incorrect on invalid word', () => {
-    let game = CWGame.fromCWRawGameData(rawGameData);
-    expect(game.getWordsFound().length).toBeFalsy();
+    expect(TestGame.state.foundWords.length).toBeFalsy();
     let invalidWord = cloneDeep(CWGameValidWord1);
     invalidWord.pop();
-    game.setSelectedWord(invalidWord);
-    game.checkSelectedWord();
-    expect(game.getCheckedWordCorrect()).toBeFalsy();
-    expect(game.getWordsFound().length == 0).toBeTruthy();
+    TestGame.state.selectedWord = invalidWord;
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state);
+    expect(TestGame.state.currentAnswerCorrect).toBeFalsy();
+    expect(TestGame.state.foundWords.length == 0).toBeTruthy();
   });
 
   it('should not set selected word if already found', () => {
-    let game = CWGame.fromCWRawGameData(rawGameData);
-    game.setSelectedWord(CWGameValidWord1);
-    game.checkSelectedWord(); //word now found
-    game.setSelectedWord(CWGameValidWord1);
-    game.checkSelectedWord(); //word now found
-    expect(game.getCheckedWordCorrect() == undefined).toBeTruthy();
-    expect(game.getWordsFound().length == 1).toBeTruthy();
+    TestGame.state.selectedWord = CWGameValidWord1;
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
+    TestGame.state.selectedWord = CWGameValidWord1;
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
+    expect(TestGame.state.currentAnswerCorrect == undefined).toBeTruthy();
+    expect(TestGame.state.foundWords.length == 1).toBeTruthy();
   });
 
   it('should have no words remaining on found', () => {
-    let game = CWGame.fromCWRawGameData(rawGameData);
-    game.setSelectedWord(CWGameValidWord1);
-    game.checkSelectedWord(); //word now found
-    game.setSelectedWord(CWGameValidWord2);
-    game.checkSelectedWord(); //word now found
-    expect(game.getWordsRemaining() == 0).toBeTruthy();
+    TestGame.state.selectedWord = CWGameValidWord1;
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
+    TestGame.state.selectedWord = CWGameValidWord2;
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
+    expect(
+      CWGame.getWordsRemaining(TestGame.gameData, TestGame.state) == 0
+    ).toBeTruthy();
   });
 
-  it('should reset to initial game state', () => {
-    let game = CWGame.fromCWRawGameData(rawGameData);
-    game.setSelectedWord(CWGameValidWord1);
-    game.checkSelectedWord(); //word now found
-    game.setSelectedWord(CWGameValidWord2);
-    game.checkSelectedWord(); //word now found
-    game.resetGame();
-    expect(game.getSelectedWord().length == 0).toBeTruthy();
-    expect(game.getCheckedWordCorrect() == undefined).toBeTruthy();
-    expect(game.getWordsFound().length == 0).toBeTruthy();
+  it('should reset to initial TestGame state', () => {
+    TestGame.state.selectedWord = CWGameValidWord1;
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
+    TestGame.state.selectedWord = CWGameValidWord2;
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
+    TestGame.state = CWGame.newGameState();
+    expect(TestGame.state.selectedWord.length == 0).toBeTruthy();
+    expect(TestGame.state.currentAnswerCorrect == undefined).toBeTruthy();
+    expect(TestGame.state.foundWords.length == 0).toBeTruthy();
   });
 
   it('should clear selected word on check', () => {
-    let game = CWGame.fromCWRawGameData(rawGameData);
+    TestGame.state.selectedWord = CWGameValidWord1;
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
 
-    game.setSelectedWord(CWGameValidWord1);
-    game.checkSelectedWord(); //word now found
-
-    expect(game.getSelectedWord().length == 0).toBeTruthy();
+    expect(TestGame.state.selectedWord.length == 0).toBeTruthy();
   });
 });
