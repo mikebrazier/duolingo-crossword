@@ -1,4 +1,20 @@
+.GameAnswerIndicatorWrapper {
+  padding: 0 calc(50% - 500px);
+  color: #58a700;
+  width: 100%;
+  max-width: 1000px;
+  position: relative;
+  display: flex;
+  border-top: 2px solid #e5e5e5;
+}
+
+.GameAnswerIndicatorWrapper.answerCorrect {
+  background-color: #b8f28b;
+  border-top: none;
+}
+
 .GameAnswerIndicator {
+  position: relative;
   padding: 16px 0 16px 40px;
   flex-grow: 1;
   display: flex;
@@ -6,7 +22,7 @@
 }
 
 /*
- *	GameAnswerCircle
+ *  GameAnswerCircle
  */
 
 .GameAnswerCircle {
@@ -21,7 +37,7 @@
 }
 
 /*
- *	GameAnswerIndicatorContent
+ *  GameAnswerIndicatorContent
  */
 
 .GameAnswerIndicatorContent {
@@ -50,63 +66,108 @@
   transform: translateY(-50%);
 }
 
+.GameAnswerMessage {
+  visibility: hidden;
+}
+
+.GameAnswerMessage.showAnswer {
+  visibility: visible;
+}
+
 .GameContinueButton {
   border-color: transparent;
-
   border-top-left-radius: 18px;
-
   border-top-right-radius: 18px;
-
+  border-radius: 16px;
+  border-style: solid;
   border-width: 0 0 4px;
 
-  padding: 13px 16px;
-  background-color: #58a700;
-
-  color: #fff;
+  color: #afafaf;
   font-size: 17px;
+  text-align: center;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-weight: 700;
+
   min-width: 150px;
   width: auto;
   display: inline-block;
-
-  text-align: center;
-
-  vertical-align: middle;
-
-  white-space: nowrap;
-  border-radius: 16px;
-  border-style: solid;
+  padding: 13px 16px;
 
   transform: translateZ(0);
-
   transition: filter 0.2s;
-  font-weight: 700;
+}
 
-  letter-spacing: 0.8px;
+.GameContinueButton.enabled {
+  cursor: pointer;
+}
 
-  text-transform: uppercase;
+.GameContinueButton.enabled {
+  color: white;
+}
+
+.GameContinueButton.showAnswer {
+  color: white;
+}
+.GameContinueButton.showAnswer.answerCorrect {
+  background-color: #58a700;
+}
+
+.GameContinueButton.showAnswer.answerWrong {
+  background-color: #ea2b2b;
 }
 
 .GameContinueButton::after {
-  border-color: transparent !important;
-
-  border-width: 0 0 4px;
-
-  bottom: -4px;
-
   content: '';
 
-  left: 0;
-
-  right: 0;
-
-  top: 0;
+  background: #e5e5e5;
+  content: '';
   border-radius: 16px;
   background-clip: padding-box;
-  background-color: #78c800;
 
-  border-style: solid;
-
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  top: 0;
   position: absolute;
-
   z-index: -1;
+}
+
+.GameContinueButton.showAnswer::after .GameContinueButton.enabled::after {
+  border-color: transparent !important;
+  border-style: solid;
+  border-width: 0 0 4px;
+}
+
+.GameContinueButton.enabled::after {
+  border-color: transparent !important;
+  border-style: solid;
+  border-width: 0 0 4px;
+}
+
+.GameContinueButton.showAnswer:active {
+  background: none;
+  border-radius: 16px;
+  border-width: 4px 0 0;
+}
+
+.GameContinueButton.enabled:active {
+  background: none;
+  border-radius: 16px;
+  border-width: 4px 0 0;
+}
+
+.GameContinueButton.showAnswer.answerCorrect::after {
+  background-color: #78c800;
+}
+.GameContinueButton.enabled::after {
+  background-color: #78c800;
+}
+
+.GameContinueButton.showAnswer.answerCorrect:hover::after {
+  filter: brightness(1.1);
+}
+
+.GameContinueButton.showAnswer.answerWrong::after {
+  background-color: #ff4b4b;
 }
