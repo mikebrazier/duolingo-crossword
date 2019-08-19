@@ -4,18 +4,6 @@ import CWLetterBox from './CWLetterBox';
 import Coords from './../types/Coords';
 import { CharacterGrid, CharacterGridPoint } from './../types/CharacterGrid';
 
-export interface CWGridProps {
-  onAnswerSelected: () => void;
-  characterGrid: CharacterGrid;
-}
-
-interface CWGridState {
-  selecting: boolean;
-  startPoint: Coords;
-  endPoint: Coords;
-  currentlySelected: Array<Coords>;
-}
-
 function getLinearSequence(start: number, finish: number) {
   let arr: Array<number> = [];
 
@@ -33,6 +21,18 @@ function getLinearSequence(start: number, finish: number) {
     }
   }
   return arr;
+}
+
+export interface CWGridProps {
+  onGridSelection: (coordsArray: Array<Coords>) => void;
+  characterGrid: CharacterGrid;
+}
+
+interface CWGridState {
+  selecting: boolean;
+  startPoint: Coords;
+  endPoint: Coords;
+  currentlySelected: Array<Coords>;
 }
 
 class CWGrid extends React.Component<CWGridProps, CWGridState> {
@@ -88,7 +88,7 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
   handleMouseUp = () => {
     console.log('mouse up');
     this.setState({ selecting: false });
-    // this.setState({ selecting: false, currentlySelected: [] });
+    this.props.onGridSelection(this.state.currentlySelected);
   };
 
   onCWLetterBoxMouseDown = (coords: Coords) => {
