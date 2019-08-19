@@ -1,69 +1,85 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import CWGrid from './components/CWGrid';
+import GameRestartButton from './components/GameRestartButton';
 import GameProgressBar from './components/GameProgressBar';
 import GameAnswerIndicator from './components/GameAnswerIndicator';
-import CWPrompt from './components/CWPrompt';
-import CWKeyword from './components/CWKeyword';
+import CWGame from './components/CWGame';
 
-const AppStyle = {
-  display: 'flex',
-  alignItems: 'stretch',
-  flexDirection: 'column' as 'column',
-  height: '100%',
-  width: '100%'
-};
+const character_grid = [
+  ['i', 'q', 'í', 'l', 'n', 'n', 'm', 'ó'],
+  ['f', 't', 'v', 'ñ', 'b', 'm', 'h', 'a'],
+  ['h', 'j', 'é', 't', 'e', 't', 'o', 'z'],
+  ['x', 'á', 'o', 'i', 'e', 'ñ', 'm', 'é'],
+  ['q', 'é', 'i', 'ó', 'q', 's', 'b', 's'],
+  ['c', 'u', 'm', 'y', 'v', 'l', 'r', 'x'],
+  ['ü', 'í', 'ó', 'm', 'o', 't', 'e', 'k'],
+  ['a', 'g', 'r', 'n', 'n', 'ó', 's', 'm']
+];
 
-const HeaderStyle = {
-  minHeight: '140px',
-  background: 'blue'
-};
+interface AppProps {}
 
-const AppBodyStyle = {
-  flexGrow: 1,
-  display: 'flex',
-  justifyContent: 'center' as 'center',
-  flexDirection: 'column' as 'column',
-  alignItems: 'center' as 'center'
-};
+interface AppState {
+  answerCheckEnabled: boolean;
+  showAnswer: boolean;
+  answerCoorect: boolean;
+}
 
-const GameContainerStyle = {
-  display: 'flex',
-  flexDirection: 'column' as 'column',
-  alignItems: 'stretch'
-};
+class App extends React.Component<AppProps, AppState> {
+  readonly state: AppState = {
+    answerCheckEnabled: false,
+    showAnswer: false,
+    answerCoorect: false
+  };
 
-const CWGridWrapperStyle = {
-  display: 'flex',
-  justifyContent: 'center'
-};
+  constructor(props: AppProps) {
+    super(props);
+    this.onAnswerSelection = this.onAnswerSelection.bind(this);
+    this.onAnswered = this.onAnswered.bind(this);
+  }
 
-const FooterStyle = {
-  minHeight: '140px',
-  background: 'red'
-};
+  onAnswerSelection(selected: boolean) {
+    this.setState({ answerCheckEnabled: selected });
+  }
 
-const App: React.FC = () => {
-  return (
-    <div className="App" style={AppStyle}>
-      <div className="Header" style={HeaderStyle}>
-        <GameProgressBar />
-      </div>
-      <div className="AppBody" style={AppBodyStyle}>
-        <div className="GameContainer" style={GameContainerStyle}>
-          <CWPrompt />
-          <CWKeyword />
-          <div className="CWGridWrapper" style={CWGridWrapperStyle}>
-            <CWGrid />
+  onAnswered(answerCorrect: boolean) {
+    this.setState({ answerCoorect: answerCorrect });
+  }
+
+  onCheckAnswer() {}
+
+  onContinue() {}
+
+  render() {
+    return (
+      <div className="App">
+        <div className="Header">
+          <div className="HeaderContentWrapper">
+            <GameRestartButton />
+            <GameProgressBar />
           </div>
         </div>
+        <div className="AppBody">
+          <div className="GameContainer">
+            <CWGame
+              characterGridData={character_grid}
+              onAnswerSelection={this.onAnswerSelection}
+              onAnswered={this.onAnswered}
+            />
+          </div>
+        </div>
+        <div className="Footer">
+          <GameAnswerIndicator
+            buttonEnabled={this.state.answerCheckEnabled}
+            answerCorrect={this.state.answerCoorect}
+            showAnswer={this.state.showAnswer}
+            onCheckAnswer={this.onCheckAnswer}
+            onContinue={this.onContinue}
+          />
+        </div>
       </div>
-      <div className="Footer" style={FooterStyle}>
-        <GameAnswerIndicator />
-      </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 export default App;
