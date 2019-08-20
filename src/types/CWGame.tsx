@@ -13,7 +13,7 @@ export interface CWRawGameData {
 export interface CWGameData {
   sourceLanguage: CWLang;
   sourceWord: string;
-  characterGrid: Array<Array<String>>;
+  characterGrid: Array<Array<string>>;
   targetLocations: Array<{ fullWord: string; word: CWWord }>;
   targetLanguage: CWLang;
 }
@@ -121,27 +121,13 @@ export function clearSelectedWord(state: CWGameState) {
 export function checkSelectedWord(gameData: CWGameData, state: CWGameState) {
   //if the word is valid
   if (wordIsValid(gameData, state.selectedWord)) {
-    //but has already been found
-    if (
-      state.foundWords.some(foundWord =>
-        wordsAreEqual(foundWord, state.selectedWord)
-      )
-    ) {
-      //set the current answer correct as undefined
-      state.currentAnswerCorrect = undefined;
-    }
-    //if the word has not yet been found
-    else {
-      state.currentAnswerCorrect = true;
-      addWordFound(state, state.selectedWord);
-    }
+    state.currentAnswerCorrect = true;
+    addWordFound(state, state.selectedWord);
   }
   //word is invalid
   else {
     state.currentAnswerCorrect = false;
   }
-
-  state.selectedWord = []; //clear current selection
 }
 
 /**
