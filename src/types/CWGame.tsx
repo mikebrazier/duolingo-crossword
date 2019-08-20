@@ -94,12 +94,28 @@ function addWordFound(state: CWGameState, word: CWWord) {
   state.foundWords.push(word);
 }
 
+export function wordAlreadyFound(state: CWGameState, word: CWWord) {
+  return state.foundWords.some(foundWord => wordsAreEqual(foundWord, word));
+}
+
 export function newGameState() {
   return {
     foundWords: [],
     selectedWord: [],
     currentAnswerCorrect: undefined
   };
+}
+
+export function setSelectedWord(state: CWGameState, word: CWWord) {
+  !wordAlreadyFound(state, word)
+    ? (state.selectedWord = word)
+    : (state.selectedWord = []);
+  state.currentAnswerCorrect = undefined;
+}
+
+export function clearSelectedWord(state: CWGameState) {
+  state.selectedWord = [];
+  state.currentAnswerCorrect = undefined;
 }
 
 export function checkSelectedWord(gameData: CWGameData, state: CWGameState) {
@@ -155,4 +171,9 @@ export function wordIsValid(gameData: CWGameData, searchWord: CWWord): boolean {
 
 export function getWordsRemaining(gameData: CWGameData, state: CWGameState) {
   return gameData.targetLocations.length - state.foundWords.length;
+}
+
+export function getProgress(gameData: CWGameData, state: CWGameState) {
+  if (gameData.targetLocations.length === 0) return 100;
+  return 100 * (state.foundWords.length / gameData.targetLocations.length);
 }
