@@ -1,20 +1,74 @@
 import * as React from 'react';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
+
+import { AppState } from './../types/AppState';
+import { continueGame, checkSelection } from '../actions/';
+
 import './GameAnswerIndicator.css';
 
-export interface GameAnswerIndicatorProps {
+/**
+ * Props & Connect-related functions
+ */
+
+export interface OwnProps {}
+
+interface StateProps {
   buttonEnabled: boolean;
   showAnswer: boolean;
   answerCorrect: boolean;
+}
+
+interface DispatchProps {
   onCheckAnswer: () => void;
   onContinue: () => void;
 }
 
-interface GameAnswerIndicatorState {}
+type GameAnswerIndicatorProps = StateProps & DispatchProps & OwnProps;
 
-class GameAnswerIndicator extends React.Component<
-  GameAnswerIndicatorProps,
-  GameAnswerIndicatorState
-> {
+const mapStateToProps = (state: AppState, ownProps: OwnProps): StateProps => ({
+  buttonEnabled:
+    //the current answer has not been checked
+    (state.games[state.gameIndex].state.selectedWord.length > 0 &&
+      state.games[state.gameIndex].state.currentAnswerCorrect === undefined) ||
+    (state.games[state.gameIndex].state.currentAnswerCorrect === true ||
+      state.games[state.gameIndex].state.currentAnswerCorrect === false)
+      ? true
+      : false,
+  showAnswer:
+    state.games[state.gameIndex].state.currentAnswerCorrect != undefined
+      ? true
+      : false,
+  answerCorrect:
+    state.games[state.gameIndex].state.currentAnswerCorrect == true
+      ? true
+      : false
+});
+
+const mapDispatchToProps = (
+  dispatch: Dispatch,
+  ownProps: OwnProps
+): DispatchProps => ({
+  onCheckAnswer: () => dispatch(checkSelection()),
+  onContinue: () => dispatch(continueGame())
+});
+
+class GameAnswerIndicator extends React.Component<GameAnswerIndicatorProps> {
+  constructor(props: GameAnswerIndicatorProps) {
+    super(props);
+    this.onButtonClick = this.onButtonClick.bind(this);
+  }
+
+  onButtonClick() {
+    if (this.props.buttonEnabled) {
+      if (this.props.showAnswer) {
+        this.props.onContinue();
+      } else {
+        this.props.onCheckAnswer();
+      }
+    }
+  }
+
   render() {
     let answerCorrect = this.props.answerCorrect;
     return (
@@ -47,7 +101,7 @@ class GameAnswerIndicator extends React.Component<
                 ${this.props.buttonEnabled ? 'enabled' : ''}
             ${this.props.showAnswer ? 'showAnswer' : ''}
             ${answerCorrect ? 'answerCorrect' : 'answerWrong'}`}
-              onClick={this.props.onCheckAnswer}
+              onClick={this.onButtonClick}
             >
               Continue
             </button>
@@ -58,4 +112,7 @@ class GameAnswerIndicator extends React.Component<
   }
 }
 
-export default GameAnswerIndicator;
+export default connect<StateProps, DispatchProps, OwnProps, AppState>(
+  mapStateToProps,
+  mapDispatchToProps
+)(GameAnswerIndicator);

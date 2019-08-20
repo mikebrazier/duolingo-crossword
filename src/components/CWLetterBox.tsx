@@ -19,7 +19,7 @@ const CWLetterBox: React.FC<CWLetterBoxProps> = props => {
   return (
     <div
       className={`CWLetterBox ${props.selected ? 'selected' : ''}
-				${props.validated ? 'validated' : ''}`}
+        ${props.validated ? 'validated' : ''}`}
       onMouseDown={() => {
         props.onMouseDown(props.coords);
       }}

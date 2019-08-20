@@ -2,12 +2,13 @@ import * as React from 'react';
 import './CWGrid.css';
 import CWLetterBox from './CWLetterBox';
 import Coords from './../types/Coords';
-import { CharacterGrid, CharacterGridPoint } from './../types/CharacterGrid';
+import { CWWord, CWLetter } from './../types/CWWord';
+import { CharacterGrid } from './../types/CharacterGrid';
 
 function getLinearSequence(start: number, finish: number) {
   let arr: Array<number> = [];
 
-  if (start == finish) {
+  if (start === finish) {
     arr.push(start);
   } else {
     if (start > finish) {
@@ -24,23 +25,25 @@ function getLinearSequence(start: number, finish: number) {
 }
 
 export interface CWGridProps {
-  onGridSelection: (coordsArray: Array<Coords>) => void;
+  onGridSelection: (word: CWWord) => void;
+  onGridSelecting: (word: CWWord) => void;
+  wordSelectEnabled: boolean;
   characterGrid: CharacterGrid;
+  foundWords: Array<CWWord>;
+  currentlySelected: CWWord;
 }
 
 interface CWGridState {
   selecting: boolean;
   startPoint: Coords;
   endPoint: Coords;
-  currentlySelected: Array<Coords>;
 }
 
 class CWGrid extends React.Component<CWGridProps, CWGridState> {
   readonly state: CWGridState = {
     selecting: false,
     startPoint: { x: 0, y: 0 },
-    endPoint: { x: 0, y: 0 },
-    currentlySelected: []
+    endPoint: { x: 0, y: 0 }
   };
 
   //TODO limit to range of grid
@@ -48,16 +51,16 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
     let arr: Array<Coords> = [];
 
     //same point
-    if (end.x == start.x && end.y == start.y) {
+    if (end.x === start.x && end.y === start.y) {
       arr.push({ x: start.x, y: start.y });
     }
     //x-axis same
-    else if (end.x == start.x) {
+    else if (end.x === start.x) {
       let yPoints = getLinearSequence(end.y, start.y);
       yPoints.forEach(yPoint => arr.push({ x: start.x, y: yPoint }));
     }
     //y-axis same
-    else if (start.y == end.y) {
+    else if (start.y === end.y) {
       let xPoints = getLinearSequence(end.x, start.x);
       xPoints.forEach(xPoint => arr.push({ x: xPoint, y: start.y }));
     }
@@ -85,52 +88,101 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
     return arr;
   }
 
+  findSelectedWord(startPoint: Coords, endPoint: Coords) {
+    let points = this.findSelectedPoints(startPoint, endPoint);
+    let arr: CWWord = [];
+    points.forEach(coord => {
+      let cwLetter = this.props.characterGrid.getCWLetterFromGridPoint(coord);
+      if (cwLetter != null) arr.push(cwLetter);
+    });
+    return arr;
+  }
+
+  getLetterFromPoint(coords: Coords) {}
+
+  handleMouseLeave = () => {
+    if (this.state.selecting) {
+      this.setState({ selecting: false });
+    }
+  };
+
   handleMouseUp = () => {
-    console.log('mouse up');
+    if (!this.props.wordSelectEnabled) return;
+    if (this.state.selecting) {
+      let arr = this.findSelectedWord(
+        this.state.startPoint,
+        this.state.endPoint
+      );
+      this.props.onGridSelection(arr);
+    }
     this.setState({ selecting: false });
-    this.props.onGridSelection(this.state.currentlySelected);
   };
 
   onCWLetterBoxMouseDown = (coords: Coords) => {
+    if (!this.props.wordSelectEnabled) return;
+    let cwLetter = this.props.characterGrid.getCWLetterFromGridPoint(coords);
     this.setState({
       selecting: true,
       startPoint: coords,
-      currentlySelected: [coords]
+      endPoint: coords
     });
+    this.props.onGridSelecting(cwLetter != null ? [cwLetter] : []);
   };
 
   onCWLetterBoxMouseEnter = (endPoint: Coords) => {
+    if (!this.props.wordSelectEnabled) return;
     if (this.state.selecting) {
-      let arr = this.findSelectedPoints(this.state.startPoint, endPoint);
-      this.setState({ currentlySelected: arr });
+      let arr = this.findSelectedWord(this.state.startPoint, endPoint);
+      this.props.onGridSelecting(arr);
+      this.setState({ endPoint: endPoint });
     }
   };
 
   render() {
     return (
       <div className="CWGridWrapper">
-        <div className="CWGrid" onMouseUp={this.handleMouseUp}>
+        <div
+          className="CWGrid"
+          onMouseUp={this.handleMouseUp}
+          onPointerUp={this.handleMouseUp}
+          onClick={this.handleMouseUp}
+          onPointerCancel={this.handleMouseUp}
+          onMouseLeave={this.handleMouseLeave}
+        >
           {this.props.characterGrid.grid.map((row, rIndex) => (
             <div className="CWGridRow" key={rIndex}>
-              {row.map((cgp: CharacterGridPoint, cIndex) => {
+              {row.map((cw: CWLetter, cIndex) => {
                 let _selected = false;
+                let _validated = false;
                 if (
-                  this.state.currentlySelected.some((coord: Coords) => {
-                    return cgp.coords.x == coord.x && cgp.coords.y == coord.y;
+                  this.props.currentlySelected.some((letter: CWLetter) => {
+                    let coord = letter.coord;
+                    return cw.coord.x === coord.x && cw.coord.y === coord.y;
                   })
                 ) {
                   _selected = true;
                 }
 
+                for (let i = 0; i < this.props.foundWords.length; ++i) {
+                  let word = this.props.foundWords[i];
+                  if (
+                    word.some((letter: CWLetter) => {
+                      let coord = letter.coord;
+                      return cw.coord.x === coord.x && cw.coord.y === coord.y;
+                    })
+                  )
+                    _validated = true;
+                }
+
                 return (
                   <CWLetterBox
-                    character={cgp.character}
-                    coords={cgp.coords}
-                    validated={false}
+                    character={cw.c}
+                    coords={cw.coord}
                     selected={_selected}
+                    validated={_validated}
                     onMouseDown={this.onCWLetterBoxMouseDown}
                     onMouseEnter={this.onCWLetterBoxMouseEnter}
-                    key={cgp.index}
+                    key={cIndex}
                   />
                 );
               })}

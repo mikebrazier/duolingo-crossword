@@ -1,10 +1,9 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import GameRestartButton from './components/GameRestartButton';
-import GameProgressBar from './components/GameProgressBar';
 import GameAnswerIndicator from './components/GameAnswerIndicator';
-import CWGame from './components/CWGame';
+import CWContainer from './containers/CWContainer';
+import GameProgressContainer from './containers/GameProgressContainer';
 
 const character_grid = [
   ['i', 'q', 'í', 'l', 'n', 'n', 'm', 'ó'],
@@ -55,27 +54,16 @@ class App extends React.Component<AppProps, AppState> {
       <div className="App">
         <div className="Header">
           <div className="HeaderContentWrapper">
-            <GameRestartButton />
-            <GameProgressBar />
+            <GameProgressContainer />
           </div>
         </div>
         <div className="AppBody">
           <div className="GameContainer">
-            <CWGame
-              characterGridData={character_grid}
-              onAnswerSelection={this.onAnswerSelection}
-              onAnswered={this.onAnswered}
-            />
+            <CWContainer />
           </div>
         </div>
         <div className="Footer">
-          <GameAnswerIndicator
-            buttonEnabled={this.state.answerCheckEnabled}
-            answerCorrect={this.state.answerCoorect}
-            showAnswer={this.state.showAnswer}
-            onCheckAnswer={this.onCheckAnswer}
-            onContinue={this.onContinue}
-          />
+          <GameAnswerIndicator />
         </div>
       </div>
     );

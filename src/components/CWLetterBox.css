@@ -17,7 +17,8 @@
   font-size: 19px;
 }
 
-.CWLetterBox.selected {
+.CWLetterBox.selected,
+.CWLetterBox.selected.validated {
   color: #1cb0f6;
   background-color: #ddf4ff;
   border-color: #1cb0f6;
@@ -29,4 +30,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.CWLetterBox.validated {
+  color: #58a700;
+  background-color: #b8f28b;
+  border-color: #58a700;
 }
