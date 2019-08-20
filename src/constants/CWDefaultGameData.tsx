@@ -145,7 +145,7 @@ const defaultGamesDataArray: Array<CWRawGameData> = [
   }
 ];
 
-let defaultGamesArray = defaultGamesDataArray.map(v =>
+const defaultGamesArray = defaultGamesDataArray.map(v =>
   makeCWGame(parseCWRawGameData(v))
 );
 
