@@ -5,13 +5,12 @@ import {
   CONTINUE_GAME,
   GAME_RESET
 } from '../constants/ActionTypes';
+import { CWWord } from './../types/CWWord';
 
-import Coords from './../types/Coords';
-
-export function selectWord(coords: Array<Coords>): ActionTypes {
+export function selectWord(word: CWWord): ActionTypes {
   return {
     type: WORD_SELECTION,
-    payload: coords
+    payload: word
   };
 }
 
