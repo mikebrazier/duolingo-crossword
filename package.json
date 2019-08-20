@@ -61,5 +61,6 @@
       "prettier --single-quote --write",
       "git add"
     ]
-  }
+  },
+  "proxy": "http://s3.amazonaws.com/duolingo-data/s3/js2"
 }
