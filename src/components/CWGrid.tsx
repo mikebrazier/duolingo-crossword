@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './CWGrid.css';
 import CWLetterBox from './CWLetterBox';
-import Coords from './../types/Coords';
+import { Coords, coordsEqual } from './../types/Coords';
 import { CWWord, CWLetter } from './../types/CWWord';
 import { CharacterGrid } from './../types/CharacterGrid';
 
@@ -157,7 +157,7 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
                 if (
                   this.props.currentlySelected.some((letter: CWLetter) => {
                     let coord = letter.coord;
-                    return cw.coord.x === coord.x && cw.coord.y === coord.y;
+                    return coordsEqual(cw.coord, coord);
                   })
                 ) {
                   _selected = true;
@@ -168,7 +168,7 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
                   if (
                     word.some((letter: CWLetter) => {
                       let coord = letter.coord;
-                      return cw.coord.x === coord.x && cw.coord.y === coord.y;
+                      return coordsEqual(cw.coord, coord);
                     })
                   )
                     _validated = true;
