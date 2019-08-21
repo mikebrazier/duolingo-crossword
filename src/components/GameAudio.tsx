@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { AppState } from './../types/AppState';
+import { AppState, appLastGameComplete } from './../types/AppState';
 import { getWordsRemaining } from './../types/CWGame';
 import { connect } from 'react-redux';
 
@@ -23,14 +23,7 @@ type GameAudioProps = StateProps;
 const mapStateToProps = (state: AppState): StateProps => ({
   currentAnswerCorrect: state.games[state.gameIndex].state.currentAnswerCorrect,
   //when the last game has been reached, and there are no more words remaining
-  gameComplete:
-    state.gameIndex === state.games.length - 1 &&
-    !getWordsRemaining(
-      state.games[state.gameIndex].gameData,
-      state.games[state.gameIndex].state
-    )
-      ? true
-      : false
+  gameComplete: appLastGameComplete(state)
 });
 
 /***************************************

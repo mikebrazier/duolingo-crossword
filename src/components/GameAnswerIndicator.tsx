@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { getWordsRemaining } from './../types/CWGame';
-import { AppState } from './../types/AppState';
+import { AppState, appLastGameComplete } from './../types/AppState';
 import { continueGame, checkSelection, resetGame } from '../actions/';
 
 import './GameAnswerIndicator.css';
@@ -53,15 +53,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps): StateProps => ({
     state.games[state.gameIndex].state.currentAnswerCorrect === true
       ? true
       : false,
-  gameComplete:
-    //if this is the last game, and there are no words remaining, game is complete
-    state.gameIndex === state.games.length - 1 &&
-    !getWordsRemaining(
-      state.games[state.gameIndex].gameData,
-      state.games[state.gameIndex].state
-    )
-      ? true
-      : false
+  gameComplete: appLastGameComplete(state)
 });
 
 const mapDispatchToProps = (

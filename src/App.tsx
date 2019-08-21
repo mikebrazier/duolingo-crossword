@@ -16,7 +16,7 @@ import GameAudio from './components/GameAudio';
 import CWContainer from './containers/CWContainer';
 import GameProgressContainer from './containers/GameProgressContainer';
 //types
-import { AppState } from './types/AppState';
+import { AppState, appLastGameComplete } from './types/AppState';
 import defaultGamesArray from './types/CWDefaultGameData';
 import { CWGameData, getWordsRemaining } from './types/CWGame';
 import { loadState } from './types/LocalStorage';
@@ -48,14 +48,7 @@ type AppProps = StateProps & DispatchProps & OwnProps;
 const mapStateToProps = (state: AppState, ownProps: OwnProps): StateProps => ({
   gameDataLoaded: state.games.length > 0 ? true : false,
   //when the last game has been reached, and there are no more words remaining
-  gameComplete:
-    state.gameIndex === state.games.length - 1 &&
-    !getWordsRemaining(
-      state.games[state.gameIndex].gameData,
-      state.games[state.gameIndex].state
-    )
-      ? true
-      : false
+  gameComplete: appLastGameComplete(state)
 });
 
 const mapDispatchToProps = (
