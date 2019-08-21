@@ -4,6 +4,7 @@ import {
   parseCWRawGameData,
   makeCWGame
 } from './../types/CWGame';
+
 const defaultGamesDataArray: Array<CWRawGameData> = [
   {
     source_language: 'en',
@@ -145,8 +146,6 @@ const defaultGamesDataArray: Array<CWRawGameData> = [
   }
 ];
 
-const defaultGamesArray = defaultGamesDataArray.map(v =>
-  makeCWGame(parseCWRawGameData(v))
-);
+const defaultGamesArray = defaultGamesDataArray.map(v => parseCWRawGameData(v));
 
 export default defaultGamesArray;
