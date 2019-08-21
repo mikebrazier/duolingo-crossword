@@ -8,8 +8,14 @@
   border-top: 2px solid #e5e5e5;
 }
 
-.GameAnswerIndicatorWrapper.answerCorrect {
+.showAnswer.answerCorrect.GameAnswerIndicatorWrapper {
   background-color: #b8f28b;
+  border-top: none;
+}
+
+.showAnswer.answerWrong.GameAnswerIndicatorWrapper {
+  background-color: #ffc1c1;
+  color: #ea2b2b;
   border-top: none;
 }
 
@@ -44,14 +50,24 @@
   flex-grow: 1;
 }
 
-.GameAnswerCircleCheck {
+.GameAnswerCircleCheckCross {
+  height: 31px;
+  width: 31px;
+  vertical-align: middle;
   display: block;
   margin: 27px 0 0 20px;
-  background-position: -166px -90px;
-  height: 31px;
-  width: 41px;
   background-image: url(//d35aaqx5ub95lt.cloudfront.net/images/icon-sprite8.svg);
-  vertical-align: middle;
+}
+
+.answerCorrect.GameAnswerCircleCheckCross {
+  background-position: -166px -90px;
+  margin: 27px 0 0 20px;
+  width: 41px;
+}
+
+.answerWrong.GameAnswerCircleCheckCross {
+  margin: 26px 0 0 25px;
+  background-position: -208px -90px !important;
 }
 
 .GameAnswerIndicatorContent {
