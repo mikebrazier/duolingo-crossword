@@ -79,7 +79,7 @@ export function CWAppReducer(
         CWGame.getWordsRemaining(
           state.games[state.gameIndex].gameData,
           state.games[state.gameIndex].state
-        ) == 0
+        ) === 0
       ) {
         //if not last game, increment index
         if (state.gameIndex != state.games.length - 1) {
