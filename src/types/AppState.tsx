@@ -4,15 +4,15 @@ import {
   makeCWGame,
   newGameState
 } from './../types/CWGame';
-import defaultGamesArray from './../constants/CWDefaultGameData';
-import { parseResponse } from './../api/duolingoCWAPI';
 
 export interface AppState {
   games: Array<CWGame>;
   gameIndex: number;
 }
 
-export const initialState: AppState = {
-  games: defaultGamesArray,
-  gameIndex: 0
+export const emptyAppState: AppState = {
+  gameIndex: 0,
+  games: []
 };
+
+export const initialState = emptyAppState;
