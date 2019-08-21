@@ -13,9 +13,9 @@ interface CWPromptKeywordProps {
 
 const CWPromptKeyword: React.FC<CWPromptKeywordProps> = props => {
   return (
-    <h3 className="CWPromptKeyword" style={CWPromptKeywordStyle}>
+    <h2 className="CWPromptKeyword" style={CWPromptKeywordStyle}>
       {props.keyword}
-    </h3>
+    </h2>
   );
 };
 
