@@ -146,6 +146,10 @@
   align-items: center;
 }
 
+button {
+  background-color: transparent;
+}
+
 button:focus {
   outline: none !important;
 }
