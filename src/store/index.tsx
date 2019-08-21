@@ -7,7 +7,13 @@
 import { createStore } from 'redux';
 import { initialState } from './../types/AppState';
 import { CWAppReducer } from './../reducers';
+import 'redux-devtools-extension';
 
 export function configureStore(preloadedState = initialState) {
-  return createStore(CWAppReducer, preloadedState);
+  return createStore(
+    CWAppReducer,
+    preloadedState,
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
+      (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+  );
 }
