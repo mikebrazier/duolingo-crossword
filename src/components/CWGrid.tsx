@@ -11,6 +11,25 @@
  *  to be found to only once.  Within render(), every CWLetter in the grid could then be hashed,
  *  and in constant time, determined to be "found" or selected".
  *
+ *  CAVEAT: CWGrid is meant to be controlled.  In effect, retain as little state as possible.
+ *  This makes switching in-and-out new prop values on the parent-side relatively trivial.
+ *  This conversly increases the complexity of implementing the hash table method mentioned
+ *  previously within the CWGrid component.  Consider the case where previously found words are removed
+ *  from the foundWords props array, and are replaced with newly found words: CWGrid would have to retain
+ *  an internal state for previously validated words, determine which words are no-longer validated,
+ *  set each letter's validated property to false, and update the lookup table with the newly found words.
+ *  This would also need to occur for each selected word.
+ *
+ *  Alternatively, the grid could be purely a presentational component, making no determinations
+ *  as to what letters should be, or are, selected or validated.  In this way, the logic for determining
+ *  selections/validations could be entirely managed by a parent component.
+ *
+ *  Ultimately, however, implementing such logic may carry more overhead in work than is worth
+ *  the benefit in reduced render time.
+ *
+ *  Using React's profiler in Chrome on my Retina, 15-inch, Mid 2015 Macbook, CWGrid average about
+ *  2-3ms to render the entire component, or ~333 fps.  This provided ample time for a smooth user-experience.
+ *
  *  @author Mike Brazier
  */
 
