@@ -48,8 +48,7 @@
     ]
   },
   "devDependencies": {
-    "prettier": "^1.18.2",
-    "react-styleguidist": "^9.1.14"
+    "prettier": "^1.18.2"
   },
   "husky": {
     "hooks": {
