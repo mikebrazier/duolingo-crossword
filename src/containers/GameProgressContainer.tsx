@@ -48,18 +48,12 @@ class GameProgressContainer extends React.Component<Props> {
     super(props);
   }
 
-  componentDidMount() {
-    // this.setState({
-    //   characterGrid: new CharacterGrid(
-    //     this.props.currentGame.gameData.characterGrid
-    //   )
-    // });
-  }
+  componentDidMount() {}
 
   render() {
     return (
       <div className="GameProgressContainer">
-        <GameRestartButton />
+        <GameRestartButton onClick={this.props.resetGame} />
         <GameProgressBar progress={this.props.progress} />
       </div>
     );
