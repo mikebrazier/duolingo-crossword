@@ -7,17 +7,22 @@ const GameRestartButtonStyle = {
   backgroundImage:
     'url(//d35aaqx5ub95lt.cloudfront.net/images/icon-sprite8.svg)',
   display: 'inline-block',
-  verticalAlign: 'middle'
+  verticalAlign: 'middle',
+  cursor: 'pointer'
 };
 
-function GameRestartButton() {
+interface GameRestartButtonProps {
+  onClick: () => void;
+}
+
+const GameRestartButton: React.FC<GameRestartButtonProps> = props => {
   return (
     <a
       className="GameRestartButton"
-      href="/"
+      onClick={props.onClick}
       style={GameRestartButtonStyle}
     ></a>
   );
-}
+};
 
 export default GameRestartButton;
