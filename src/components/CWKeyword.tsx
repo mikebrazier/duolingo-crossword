@@ -1,4 +1,14 @@
+/** @file CWKeyword.tsx
+ *  @brief Presentational Component for the search keyword in a crossword
+ *
+ *  @author Mike Brazier
+ */
+
 import * as React from 'react';
+
+/***************************************
+ * Inline Styling
+ ***************************************/
 
 const CWPromptKeywordStyle = {
   marginTop: '24px',
@@ -7,9 +17,17 @@ const CWPromptKeywordStyle = {
   textTransform: 'capitalize' as 'capitalize'
 };
 
+/***************************************
+ * Props
+ ***************************************/
+
 interface CWPromptKeywordProps {
   keyword: string;
 }
+
+/***************************************
+ * Component
+ ***************************************/
 
 const CWPromptKeyword: React.FC<CWPromptKeywordProps> = props => {
   return (

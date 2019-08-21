@@ -1,5 +1,15 @@
-import { EN_LANG, ES_LANG, CWLang } from './CWLang';
+/** @file CWGame.tsx
+ *  @brief Stateless representation of a Crossword game
+ *
+ *  @author Mike Brazier
+ */
+
+import { CWLang } from './CWLang';
 import { CWLetter, CWWord, wordsAreEqual } from './CWWord';
+
+/***************************************
+ * Types
+ ***************************************/
 
 //for handling API responses
 export interface CWRawGameData {
@@ -29,6 +39,20 @@ export interface CWGame {
   gameData: CWGameData;
 }
 
+/***************************************
+ * Functions
+ ***************************************/
+
+/**
+ * CWRawGame data must be formatted to CWWord types
+ *
+ * Although it is assumed the received data is valid,
+ * a simple check is done when creating the targetLocations
+ * to validate that every target word has a pair of x,y coordinates
+ * for each letter within it.
+ *
+ * @param      {CWRawGameData}  rawData  The raw data
+ */
 export function parseCWRawGameData(rawData: CWRawGameData) {
   let gameData: CWGameData;
 
@@ -45,7 +69,7 @@ export function parseCWRawGameData(rawData: CWRawGameData) {
           let wordLocations: CWWord = [];
 
           //assert there are even number of x-y coordinates
-          if (coordChars.length % 2 != 0) {
+          if (coordChars.length % 2 !== 0) {
             throw new Error('invalid game data');
           }
 
@@ -74,6 +98,17 @@ export function parseCWRawGameData(rawData: CWRawGameData) {
   return gameData;
 }
 
+/**
+ * Makes a cw game.
+ *
+ * Does NOT make clones of selectedWord or foundWords arguments.
+ *
+ * @param      {CWGameData}   data    The data
+ * @param      {<type>}       ans     The current answer being correct
+ * @param      {CWWord}       sW      The currently selectedWord
+ * @param      {ArrayCWWord}  fW      The already foundWords
+ * @return     {CWGame}       { description_of_the_return_value }
+ */
 export function makeCWGame(
   data: CWGameData,
   ans = undefined,
@@ -90,10 +125,22 @@ export function makeCWGame(
   };
 }
 
+/**
+ * Adds a word found.  Modifies state
+ *
+ * @param      {CWGameState}  state   The state
+ * @param      {CWWord}       word    The word
+ */
 function addWordFound(state: CWGameState, word: CWWord) {
   state.foundWords.push(word);
 }
 
+/**
+ * Checks if a given word has been found within the state.foundWOrds
+ *
+ * @param      {CWGameState}  state   The state
+ * @param      {CWWord}       word    The word
+ */
 export function wordAlreadyFound(state: CWGameState, word: CWWord) {
   return state.foundWords.some(foundWord => wordsAreEqual(foundWord, word));
 }
@@ -106,6 +153,12 @@ export function newGameState() {
   };
 }
 
+/**
+ * Sets the selected word.  Modifies state.
+ *
+ * @param      {CWGameState}  state   The state
+ * @param      {CWWord}       word    The word
+ */
 export function setSelectedWord(state: CWGameState, word: CWWord) {
   !wordAlreadyFound(state, word)
     ? (state.selectedWord = word)
@@ -113,11 +166,23 @@ export function setSelectedWord(state: CWGameState, word: CWWord) {
   state.currentAnswerCorrect = undefined;
 }
 
+/**
+ * Clears selected word.  Modifies state.
+ *
+ * @param      {CWGameState}  state   The state
+ */
 export function clearSelectedWord(state: CWGameState) {
   state.selectedWord = [];
   state.currentAnswerCorrect = undefined;
 }
 
+/**
+ * Checks if the currently selected word in state is valid and not found.
+ * Modifies state.
+ *
+ * @param      {CWGameData}   gameData  The game data
+ * @param      {CWGameState}  state     The state
+ */
 export function checkSelectedWord(gameData: CWGameData, state: CWGameState) {
   //if the word is valid
   if (wordIsValid(gameData, state.selectedWord)) {
@@ -132,6 +197,7 @@ export function checkSelectedWord(gameData: CWGameData, state: CWGameState) {
 
 /**
  * Checks if CWWord is valid within CWgameData.targetLocations
+ * Does not modify any of its arguments.
  *
  * Used by checkSelectedWord, exported only for testing.
  * Not to be used.
@@ -155,10 +221,23 @@ export function wordIsValid(gameData: CWGameData, searchWord: CWWord): boolean {
   return false;
 }
 
+/**
+ * Gets the words remaining.  Does not modify state.
+ *
+ * @param      {CWGameData}   gameData  The game data
+ * @param      {CWGameState}  state     The state
+ */
 export function getWordsRemaining(gameData: CWGameData, state: CWGameState) {
   return gameData.targetLocations.length - state.foundWords.length;
 }
 
+/**
+ * Returns a number 0 through 100 representing the games progress.
+ * Does not modify state.
+ *
+ * @param      {CWGameData}   gameData  The game data
+ * @param      {CWGameState}  state     The state
+ */
 export function getProgress(gameData: CWGameData, state: CWGameState) {
   if (gameData.targetLocations.length === 0) return 100;
   return 100 * (state.foundWords.length / gameData.targetLocations.length);

@@ -1,3 +1,9 @@
+/** @file actions/index.tsx
+ *  @brief Redux action creators for game actions
+ *
+ *  @author Mike Brazier
+ */
+
 import {
   ActionTypes,
   WORD_SELECTION,
@@ -10,6 +16,10 @@ import {
 import { CWWord } from './../types/CWWord';
 import { CWGameData } from './../types/CWGame';
 import { AppState } from './../types/AppState';
+
+/***************************************
+ * Action Creators
+ ***************************************/
 
 export function selectWord(word: CWWord): ActionTypes {
   return {

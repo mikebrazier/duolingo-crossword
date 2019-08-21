@@ -1,17 +1,22 @@
+/** @file App.tsx
+ *  @brief Main App component for entire page
+ *
+ *  @author Mike Brazier
+ */
+
 //dependencies
 import React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 //assets
-import logo from './logo.svg';
 import './App.css';
-//containers
+//components & containers
 import GameAnswerIndicator from './components/GameAnswerIndicator';
 import GameAudio from './components/GameAudio';
 import CWContainer from './containers/CWContainer';
 import GameProgressContainer from './containers/GameProgressContainer';
 //types
-import { AppState, initialState } from './types/AppState';
+import { AppState } from './types/AppState';
 import defaultGamesArray from './types/CWDefaultGameData';
 import { CWGameData, getWordsRemaining } from './types/CWGame';
 import { loadState } from './types/LocalStorage';
@@ -20,9 +25,10 @@ import { receiveGameData, loadAppState } from './actions/';
 //api
 import { fetchGames } from './api/duolingoAPI';
 
-/**
- * Props & State Defs
- */
+/***************************************
+ * Props, State, & Connect-related fcns
+ ***************************************/
+
 interface AppInternalState {}
 
 interface OwnProps {}
@@ -38,10 +44,6 @@ interface DispatchProps {
 }
 
 type AppProps = StateProps & DispatchProps & OwnProps;
-
-/**
- * connect() fcns
- */
 
 const mapStateToProps = (state: AppState, ownProps: OwnProps): StateProps => ({
   gameDataLoaded: state.games.length > 0 ? true : false,
@@ -64,22 +66,27 @@ const mapDispatchToProps = (
   loadAppState: (aS: AppState) => dispatch(loadAppState(aS))
 });
 
-/**
+/***************************************
  * App Component
- */
+ ***************************************/
 
 class App extends React.Component<AppProps, AppInternalState> {
-  constructor(props: AppProps) {
-    super(props);
-  }
-
+  /**
+   * After mount, load the previous state from LocalStorage,
+   * or configure App with game data from Network Fetch API or
+   * memory on request failure
+   *
+   * A timeout is artificially set to show a brief 'loading' component
+   * the timeout is for demonstration purposes, and smooth UI
+   */
   componentDidMount() {
     //purposefully induce a delay on page load, to demonstrate a load-screen
     setTimeout(() => {
       //load state from local storage
       let loadedState = loadState();
-
+      //if failed
       if (loadedState === undefined) {
+        //issue a network request
         fetchGames().then(
           //on gameData successfully fetched
           gameData => {
@@ -90,6 +97,7 @@ class App extends React.Component<AppProps, AppInternalState> {
           reason => {
             console.log('failed to fetch data from Duolingo API', reason);
             console.log('loading default gameData served with app!');
+            //set game data from memory
             this.props.receiveGameData(defaultGamesArray);
           }
         );
@@ -105,7 +113,11 @@ class App extends React.Component<AppProps, AppInternalState> {
   GameComplete() {
     return (
       <div className="GameComplete">
-        <img style={{ marginBottom: '20px' }} src="/images/gameComplete.svg" />
+        <img
+          style={{ marginBottom: '20px' }}
+          alt=""
+          src="/assets/images/gameComplete.svg"
+        />
         <h1 style={{ marginBottom: '20px' }}> Lesson Complete! </h1>
       </div>
     );
@@ -141,7 +153,7 @@ class App extends React.Component<AppProps, AppInternalState> {
   AppLoading() {
     return (
       <div className="Loading">
-        <img src="/images/loading.gif" />
+        <img alt="" src="/assets/images/loading.gif" />
         <br />
         <h2>Loading</h2>
       </div>

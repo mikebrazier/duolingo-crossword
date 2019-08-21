@@ -1,11 +1,17 @@
+/** @file CharacterGrid.tsx
+ *  @brief Class for representing an array of rows, each being an array of CWLetters
+ *
+ *  @author Mike Brazier
+ */
+
 import Coords from './Coords';
 import { CWLetter } from './CWWord';
 
 export class CharacterGrid {
   grid: Array<Array<CWLetter>>;
+
   constructor(cg: Array<Array<string>>) {
     this.grid = new Array<Array<CWLetter>>();
-    let index = 0;
     for (let i = 0; i < cg.length; ++i) {
       this.grid.push([]);
       for (let j = 0; j < cg[i].length; ++j) {
@@ -13,7 +19,6 @@ export class CharacterGrid {
           c: cg[i][j],
           coord: { x: j, y: i }
         });
-        ++index;
       }
     }
   }

@@ -1,6 +1,11 @@
+/** @file store/index.tsx
+ *  @brief Redux store configuration function
+ *
+ *  @author Mike Brazier
+ */
+
 import { createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { AppState, initialState } from './../types/AppState';
+import { initialState } from './../types/AppState';
 import { CWAppReducer } from './../reducers';
 
 export function configureStore(preloadedState = initialState) {

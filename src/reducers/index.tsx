@@ -1,12 +1,11 @@
-import { createStore } from 'redux';
+/** @file reducers/index.tsx
+ *  @brief Redux reducers to update the store on received actions
+ *
+ *  @author Mike Brazier
+ */
+
 import { cloneDeep } from 'lodash';
 import * as CWGame from './../types/CWGame';
-import {
-  selectWord,
-  checkSelection,
-  continueGame,
-  resetGame
-} from './../actions';
 import {
   ActionTypes,
   WORD_SELECTION,
@@ -17,8 +16,18 @@ import {
   LOAD_APP_STATE
 } from './../constants/ActionTypes';
 import { AppState, initialState } from './../types/AppState';
-import { saveState, loadState } from './../types/LocalStorage';
+import { saveState } from './../types/LocalStorage';
 
+/***************************************
+ * Helper Functions
+ ***************************************/
+
+/**
+ * Save the AppState to local storage, removing any current
+ * word selections and checked answers.  Does not modify appState.
+ *
+ * @param      {AppState}  appState  The application state
+ */
 function saveAppState(appState: AppState) {
   let newAppState: AppState = cloneDeep(appState);
 
@@ -27,14 +36,20 @@ function saveAppState(appState: AppState) {
     newState.foundWords = game.state.foundWords;
   });
 
-  let result = saveState(newAppState);
+  saveState(newAppState);
 }
 
+/***************************************
+ * Root Reducer
+ ***************************************/
 export function CWAppReducer(
   state = initialState,
   action: ActionTypes
 ): AppState {
   switch (action.type) {
+    /**
+     *  Update the current game's word selection
+     */
     case WORD_SELECTION: {
       let newGameState = cloneDeep(state.games[state.gameIndex].state);
       CWGame.setSelectedWord(newGameState, action.payload);
@@ -50,6 +65,11 @@ export function CWAppReducer(
         gameIndex: state.gameIndex
       };
     }
+    /**
+     *  Check the currently selected word,
+     *  will updated game.state's currentAnswerCorrect, foundWords,
+     *  and currentAnswerCorrect members
+     */
     case CHECK_SELECTION: {
       let newGameState = cloneDeep(state.games[state.gameIndex].state);
       CWGame.checkSelectedWord(
@@ -69,6 +89,12 @@ export function CWAppReducer(
         gameIndex: state.gameIndex
       };
     }
+    /**
+     *  After an answer has been checked, clear the selected word
+     *  if all words have been found, advance state to the next game
+     *
+     *  Saves the new state to local storage to maintain user progress
+     */
     case CONTINUE_GAME: {
       let newGameState = cloneDeep(state.games[state.gameIndex].state);
       //always clear the selected word on continue
@@ -82,7 +108,7 @@ export function CWAppReducer(
         ) === 0
       ) {
         //if not last game, increment index
-        if (state.gameIndex != state.games.length - 1) {
+        if (state.gameIndex !== state.games.length - 1) {
           ++newGameIndex;
         }
       }
@@ -103,7 +129,9 @@ export function CWAppReducer(
 
       return newAppState;
     }
-    //on reset
+    /**
+     *  Reset all game states within the AppState, save to localstorage
+     */
     case GAME_RESET: {
       //deep copy all the games
       let newGames = cloneDeep(state.games);
@@ -119,6 +147,10 @@ export function CWAppReducer(
       //return
       return newAppState;
     }
+    /**
+     *  Once game data has been aquired ( via LocalStorage, Fetch, or in Memory )
+     *  create an array of CWGames and assign to AppState
+     */
     case RECEIVE_GAME_DATA: {
       return {
         games: action.payload.map(gD => {
@@ -127,6 +159,9 @@ export function CWAppReducer(
         gameIndex: 0
       };
     }
+    /**
+     *  Set the application to a provided state (e.g. loaded from LocalStorage)
+     */
     case LOAD_APP_STATE: {
       return action.payload;
     }

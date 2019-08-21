@@ -1,3 +1,9 @@
+/** @file GameAnswerIndicator.tsx
+ *  @brief Component for rendering footer in Crossword app
+ * *
+ *  @author Mike Brazier
+ */
+
 import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
@@ -7,9 +13,9 @@ import { continueGame, checkSelection, resetGame } from '../actions/';
 
 import './GameAnswerIndicator.css';
 
-/**
- * Props & Connect-related functions
- */
+/***************************************
+ * Properties, State, & Connect() Fcns
+ ***************************************/
 
 export interface OwnProps {}
 
@@ -33,19 +39,22 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps): StateProps => ({
     //the current answer has not been checked
     (state.games[state.gameIndex].state.selectedWord.length > 0 &&
       state.games[state.gameIndex].state.currentAnswerCorrect === undefined) ||
+    //the current answer has been checked
     (state.games[state.gameIndex].state.currentAnswerCorrect === true ||
       state.games[state.gameIndex].state.currentAnswerCorrect === false)
       ? true
       : false,
   showAnswer:
-    state.games[state.gameIndex].state.currentAnswerCorrect != undefined
+    //if the answer is defined as true or false, show
+    state.games[state.gameIndex].state.currentAnswerCorrect !== undefined
       ? true
       : false,
   answerCorrect:
-    state.games[state.gameIndex].state.currentAnswerCorrect == true
+    state.games[state.gameIndex].state.currentAnswerCorrect === true
       ? true
       : false,
   gameComplete:
+    //if this is the last game, and there are no words remaining, game is complete
     state.gameIndex === state.games.length - 1 &&
     !getWordsRemaining(
       state.games[state.gameIndex].gameData,
@@ -63,6 +72,10 @@ const mapDispatchToProps = (
   onContinue: () => dispatch(continueGame()),
   onComplete: () => dispatch(resetGame())
 });
+
+/***************************************
+ * Component
+ ***************************************/
 
 class GameAnswerIndicator extends React.Component<GameAnswerIndicatorProps> {
   constructor(props: GameAnswerIndicatorProps) {

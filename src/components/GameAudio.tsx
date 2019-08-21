@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
+/** @file GameAudio.tsx
+ *  @brief Component for trigger audio alerts for correct/wrong answers, and game complete
+ * *
+ *  @author Mike Brazier
+ */
+
+import React from 'react';
 import { AppState } from './../types/AppState';
 import { getWordsRemaining } from './../types/CWGame';
 import { connect } from 'react-redux';
 
-/**
- * Props & State Defs
- */
+/***************************************
+ * Properties & Connect Fcns
+ ***************************************/
 
 interface StateProps {
   gameComplete: boolean;
@@ -26,6 +32,10 @@ const mapStateToProps = (state: AppState): StateProps => ({
       ? true
       : false
 });
+
+/***************************************
+ * Component
+ ***************************************/
 
 class GameAudio extends React.Component<GameAudioProps> {
   answerCorrectAudio = new Audio('/assets/audio/right_answer.mp3');
@@ -50,6 +60,7 @@ class GameAudio extends React.Component<GameAudioProps> {
 
     //when game state switches from game incomplete to game complete
     if (prevProps.gameComplete === false && this.props.gameComplete === true) {
+      //set timeout, to allow delay while final answer correct sound plays
       setTimeout(() => this.gameCompleteAudio.play(), 1000);
     }
   }

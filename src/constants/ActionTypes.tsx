@@ -1,3 +1,9 @@
+/** @file ActionTypes.tsx
+ *  @brief Redux actions for crossword game functionality
+ *
+ *  @author Mike Brazier
+ */
+
 import { CWWord } from './../types/CWWord';
 import { CWGameData } from './../types/CWGame';
 import { AppState } from './../types/AppState';
@@ -7,6 +13,10 @@ export const CONTINUE_GAME = 'CONTINUE_GAME';
 export const GAME_RESET = 'GAME_RESET';
 export const RECEIVE_GAME_DATA = 'RECEIVE_GAME_DATA';
 export const LOAD_APP_STATE = 'LOAD_APP_STATE';
+
+/***************************************
+ * Actions
+ ***************************************/
 
 export interface WordSelectionAction {
   type: typeof WORD_SELECTION;
@@ -34,6 +44,10 @@ export interface LoadAppStateAction {
   type: typeof LOAD_APP_STATE;
   payload: AppState;
 }
+
+/***************************************
+ * ActionTypes
+ ***************************************/
 
 export type ActionTypes =
   | WordSelectionAction

@@ -1,3 +1,9 @@
+/** @file CWContainer.tsx
+ *  @brief Component container with React-Redux connections for crossword challenge
+ *
+ *  @author Mike Brazier
+ */
+
 import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
@@ -6,14 +12,13 @@ import CWKeyword from './../components/CWKeyword';
 import CWGrid from './../components/CWGrid';
 import * as CWGame from './../types/CWGame';
 import { CWWord, CWLetter } from './../types/CWWord';
-import Coords from './../types/Coords';
 import { CharacterGrid } from './../types/CharacterGrid';
 import { AppState } from './../types/AppState';
 import { selectWord } from '../actions/';
 
-/**
- * Props & Connect-related functions
- */
+/***************************************
+ * Props, State, & Connect-related fcns
+ ***************************************/
 
 export interface OwnProps {}
 
@@ -40,7 +45,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps): StateProps => ({
   currentGame: state.games[state.gameIndex],
   currentlySelected: state.games[state.gameIndex].state.selectedWord,
   wordSelectEnabled:
-    state.games[state.gameIndex].state.currentAnswerCorrect == undefined
+    state.games[state.gameIndex].state.currentAnswerCorrect === undefined
       ? true
       : false,
   gameIndex: state.gameIndex
@@ -53,9 +58,9 @@ const mapDispatchToProps = (
   dispatch: dispatch
 });
 
-/**
- * Componenet
- */
+/***************************************
+ * Component
+ ***************************************/
 
 class CWContainer extends React.Component<CWContainerProps, CWContainerState> {
   readonly state: CWContainerState = {
@@ -67,7 +72,6 @@ class CWContainer extends React.Component<CWContainerProps, CWContainerState> {
   constructor(props: CWContainerProps) {
     super(props);
     this.onGridSelection = this.onGridSelection.bind(this);
-    this.onGridSelecting = this.onGridSelecting.bind(this);
   }
 
   componentDidMount() {
@@ -79,12 +83,24 @@ class CWContainer extends React.Component<CWContainerProps, CWContainerState> {
     });
   }
 
+  /**
+   * Changes between AppState's gameIndex require a new CharacterGrid to be
+   * initialized with the current game's data
+   *
+   * gameIndex must be held in the components internal state to be identify
+   * when the game has changed.  Once occured, update the state with the new
+   * index and CharacterGrid
+   *
+   * @param      {CWContainerProps}  props   The properties
+   * @param      {AppState}          state   The state
+   * @return     {CWContainerState}  The derived state from properties.
+   */
   static getDerivedStateFromProps(
     props: CWContainerProps,
     state: AppState
   ): CWContainerState | null {
     //create a new character grid representation on new game
-    if (props.gameIndex != state.gameIndex) {
+    if (props.gameIndex !== state.gameIndex) {
       return {
         characterGrid: new CharacterGrid(
           props.currentGame.gameData.characterGrid
@@ -96,14 +112,7 @@ class CWContainer extends React.Component<CWContainerProps, CWContainerState> {
     return null;
   }
 
-  onGridSelecting(word: CWWord) {
-    //while the app's state has not evaluated a user selection as true or false,
-    //allow selections to be made
-    this.props.dispatch(selectWord(word));
-  }
-
   onGridSelection(word: CWWord) {
-    //otherwise dispatch the selection
     this.props.dispatch(selectWord(word));
   }
 
@@ -116,7 +125,7 @@ class CWContainer extends React.Component<CWContainerProps, CWContainerState> {
         />
         <CWKeyword keyword={this.props.currentGame.gameData.sourceWord} />
         <CWGrid
-          onGridSelecting={this.onGridSelecting}
+          onGridSelecting={this.onGridSelection}
           onGridSelection={this.onGridSelection}
           wordSelectEnabled={this.props.wordSelectEnabled}
           characterGrid={this.state.characterGrid}
@@ -127,6 +136,10 @@ class CWContainer extends React.Component<CWContainerProps, CWContainerState> {
     );
   }
 }
+
+/***************************************
+ * connect export
+ ***************************************/
 
 export default connect<StateProps, DispatchProps, OwnProps, AppState>(
   mapStateToProps,

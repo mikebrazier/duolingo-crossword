@@ -1,10 +1,23 @@
+/** @file GameProgressBar.tsx
+ *  @brief Presentational component for displaying current game progress
+ *
+ *  @author Mike Brazier
+ */
+
 import * as React from 'react';
 import './GameProgressBar.css';
+
+/***************************************
+ * Props
+ ***************************************/
 
 interface GameProgressBarProps {
   progress: number;
 }
 
+/***************************************
+ * Component
+ ***************************************/
 const GameProgressBar: React.FC<GameProgressBarProps> = props => {
   let progress = props.progress;
   if (progress < 0) progress = 0;

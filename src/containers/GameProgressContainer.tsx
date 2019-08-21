@@ -1,3 +1,9 @@
+/** @file GameProgressContainer.tsx
+ *  @brief Component container containing progress bar and gamereset button for page header
+ *
+ *  @author Mike Brazier
+ */
+
 import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
@@ -7,9 +13,10 @@ import { resetGame } from '../actions/';
 import GameRestartButton from './../components/GameRestartButton';
 import GameProgressBar from './../components/GameProgressBar';
 import './GameProgressContainer.css';
-/**
- * Props, State & Connect-related functions
- */
+
+/***************************************
+ * Props, State, & Connect-related fcns
+ ***************************************/
 
 export interface OwnProps {}
 
@@ -39,17 +46,10 @@ const mapDispatchToProps = (
   resetGame: () => dispatch(resetGame())
 });
 
-/**
- * Componenet
- */
-
+/***************************************
+ * Component
+ ***************************************/
 class GameProgressContainer extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-  componentDidMount() {}
-
   render() {
     return (
       <div className="GameProgressContainer">
@@ -60,6 +60,9 @@ class GameProgressContainer extends React.Component<Props> {
   }
 }
 
+/***************************************
+ * connect export
+ ***************************************/
 export default connect<StateProps, DispatchProps, OwnProps, AppState>(
   mapStateToProps,
   mapDispatchToProps

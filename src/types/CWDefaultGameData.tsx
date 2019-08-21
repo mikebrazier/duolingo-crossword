@@ -1,10 +1,17 @@
-import {
-  CWGame,
-  CWRawGameData,
-  parseCWRawGameData,
-  makeCWGame
-} from './../types/CWGame';
+/** @file CWDefaultGameData.tsx
+ *  @brief Constant, default game data to be held in memory for initializing AppState
+ *
+ *  @author Mike Brazier
+ */
 
+import { CWRawGameData, parseCWRawGameData } from './../types/CWGame';
+
+/***************************************
+ * Constants
+ ***************************************/
+
+//array contains CWRawGameData, which is a type for the parsed JSON
+//received from the Duolingo server
 const defaultGamesDataArray: Array<CWRawGameData> = [
   {
     source_language: 'en',
@@ -146,6 +153,7 @@ const defaultGamesDataArray: Array<CWRawGameData> = [
   }
 ];
 
+//the Duolingo JSON format must be parsed into CWGameData type
 const defaultGamesArray = defaultGamesDataArray.map(v => parseCWRawGameData(v));
 
 export default defaultGamesArray;

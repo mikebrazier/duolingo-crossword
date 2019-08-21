@@ -1,3 +1,9 @@
+/** @file index.tsx
+ *  @brief Provide Redux store to app & render application
+ *
+ *  @author Mike Brazier
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -6,8 +12,6 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { emptyAppState } from './types/AppState';
 import { configureStore } from './store';
-import { loadState } from './types/LocalStorage';
-import { fetchGames } from './api/duolingoAPI';
 
 const store = configureStore(emptyAppState);
 

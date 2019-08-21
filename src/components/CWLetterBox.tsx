@@ -1,6 +1,16 @@
+/** @file CWLetterBox.tsx
+ *  @brief Presentational Component a letter within a crossword grid
+ * *
+ *  @author Mike Brazier
+ */
+
 import * as React from 'react';
 import Coords from './../types/Coords';
 import './CWLetterBox.css';
+
+/***************************************
+ * Properties & State
+ ***************************************/
 
 export interface CWLetterBoxProps {
   character: string;
@@ -11,9 +21,9 @@ export interface CWLetterBoxProps {
   onMouseEnter: (coords: Coords) => void;
 }
 
-interface CWLetterBoxState {
-  selected: boolean;
-}
+/***************************************
+ * Component
+ ***************************************/
 
 const CWLetterBox: React.FC<CWLetterBoxProps> = props => {
   return (

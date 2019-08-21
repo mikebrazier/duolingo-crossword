@@ -1,6 +1,17 @@
+/** @file CWWord.tsx
+ *  @brief Types & Functions for representing crossword letters and words
+ *
+ *  @author Mike Brazier
+ */
 import { isEqual } from 'lodash';
 import Coords from './Coords';
 
+/***************************************
+ * Types
+ ***************************************/
+//it is important to associate a letter
+//with its grid coordinates, as incorrect views may otherwise map
+//incorrect characters to incorrect coordinates
 export type CWLetter = {
   coord: Coords;
   c: string;
@@ -9,6 +20,9 @@ export type CWLetter = {
 //coordinates word type alias
 export type CWWord = Array<CWLetter>;
 
+/***************************************
+ * Functions
+ ***************************************/
 function sortsByCoordsThenLetter(word: CWWord) {
   return word.sort((a: CWLetter, b: CWLetter) => {
     if (a.coord.x < b.coord.x) {
@@ -33,7 +47,7 @@ function sortsByCoordsThenLetter(word: CWWord) {
 }
 
 /**
- * sorts by coordinates x,y
+ * Compares if words are equal, uses sortsByCoordsThenLetter
  *
  * @param      {CWWord}   wordA   The word a
  * @param      {CWWord}   wordB   The word b
@@ -41,7 +55,7 @@ function sortsByCoordsThenLetter(word: CWWord) {
  */
 export function wordsAreEqual(wordA: CWWord, wordB: CWWord): boolean {
   //words must be same length
-  if (wordA.length != wordB.length) return false;
+  if (wordA.length !== wordB.length) return false;
 
   wordA = sortsByCoordsThenLetter(wordA);
   wordB = sortsByCoordsThenLetter(wordB);
