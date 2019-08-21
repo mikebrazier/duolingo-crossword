@@ -71,43 +71,56 @@ class GameAnswerIndicator extends React.Component<GameAnswerIndicatorProps> {
 
   render() {
     let answerCorrect = this.props.answerCorrect;
+    let buttonText = '';
+    if (
+      !this.props.buttonEnabled ||
+      (this.props.buttonEnabled && !this.props.showAnswer)
+    )
+      buttonText = 'Check Answer';
+    if (this.props.showAnswer) buttonText = 'Continue';
     return (
-      <div
-        className={`GameAnswerIndicatorWrapper 
+      <>
+        <div
+          className={`GameAnswerIndicatorWrapper 
+          ${this.props.showAnswer ? 'showAnswer' : ''}
           ${answerCorrect ? 'answerCorrect' : 'answerWrong'}`}
-      >
-        <div className="GameAnswerIndicator">
-          <div
-            className={`GameAnswerMessage
-         ${this.props.showAnswer ? 'showAnswer' : ''}`}
-          >
-            <div className="GameAnswerCircle">
-              <span className="GameAnswerCircleCheck" />
-            </div>
-            <div className="GameAnswerIndicatorContent">
-              <div
-                className={`GameAnswerCorrectMessage
-            ${answerCorrect ? 'answerCorrect' : 'answerWrong'}`}
-              >
-                <h2>
-                  {answerCorrect ? 'Good find!' : "Oops!  That's inncorrect."}
-                </h2>
+        >
+          <div className="GameAnswerIndicator">
+            <div
+              className={`GameAnswerMessage
+              ${this.props.showAnswer ? 'showAnswer' : ''}`}
+            >
+              <div className="GameAnswerCircle">
+                <span
+                  className={`GameAnswerCircleCheckCross
+                  ${answerCorrect ? 'answerCorrect' : 'answerWrong'}`}
+                />
+              </div>
+              <div className="GameAnswerIndicatorContent">
+                <div
+                  className={`GameAnswerCorrectMessage
+                  ${answerCorrect ? 'answerCorrect' : 'answerWrong'}`}
+                >
+                  <h2>
+                    {answerCorrect ? 'Good find!' : "Oops!  That's inncorrect."}
+                  </h2>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="GameContinueButtonWrapper">
-            <button
-              className={`GameContinueButton
+            <div className="GameContinueButtonWrapper">
+              <button
+                className={`GameContinueButton
                 ${this.props.buttonEnabled ? 'enabled' : ''}
-            ${this.props.showAnswer ? 'showAnswer' : ''}
-            ${answerCorrect ? 'answerCorrect' : 'answerWrong'}`}
-              onClick={this.onButtonClick}
-            >
-              Continue
-            </button>
+                ${this.props.showAnswer ? 'showAnswer' : ''}
+                ${answerCorrect ? 'answerCorrect' : 'answerWrong'}`}
+                onClick={this.onButtonClick}
+              >
+                {buttonText}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }
