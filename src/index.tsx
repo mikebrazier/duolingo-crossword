@@ -4,9 +4,12 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
+import { emptyAppState } from './types/AppState';
 import { configureStore } from './store';
+import { loadState } from './types/LocalStorage';
+import { fetchGames } from './api/duolingoAPI';
 
-const store = configureStore();
+const store = configureStore(emptyAppState);
 
 ReactDOM.render(
   <Provider store={store}>
