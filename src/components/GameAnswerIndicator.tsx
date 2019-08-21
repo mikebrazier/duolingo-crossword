@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-
+import { getWordsRemaining } from './../types/CWGame';
 import { AppState } from './../types/AppState';
-import { continueGame, checkSelection } from '../actions/';
+import { continueGame, checkSelection, resetGame } from '../actions/';
 
 import './GameAnswerIndicator.css';
 
@@ -17,11 +17,13 @@ interface StateProps {
   buttonEnabled: boolean;
   showAnswer: boolean;
   answerCorrect: boolean;
+  gameComplete: boolean;
 }
 
 interface DispatchProps {
   onCheckAnswer: () => void;
   onContinue: () => void;
+  onComplete: () => void;
 }
 
 type GameAnswerIndicatorProps = StateProps & DispatchProps & OwnProps;
@@ -42,6 +44,14 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps): StateProps => ({
   answerCorrect:
     state.games[state.gameIndex].state.currentAnswerCorrect == true
       ? true
+      : false,
+  gameComplete:
+    state.gameIndex === state.games.length - 1 &&
+    !getWordsRemaining(
+      state.games[state.gameIndex].gameData,
+      state.games[state.gameIndex].state
+    )
+      ? true
       : false
 });
 
@@ -50,7 +60,8 @@ const mapDispatchToProps = (
   ownProps: OwnProps
 ): DispatchProps => ({
   onCheckAnswer: () => dispatch(checkSelection()),
-  onContinue: () => dispatch(continueGame())
+  onContinue: () => dispatch(continueGame()),
+  onComplete: () => dispatch(resetGame())
 });
 
 class GameAnswerIndicator extends React.Component<GameAnswerIndicatorProps> {
@@ -61,10 +72,14 @@ class GameAnswerIndicator extends React.Component<GameAnswerIndicatorProps> {
 
   onButtonClick() {
     if (this.props.buttonEnabled) {
-      if (this.props.showAnswer) {
-        this.props.onContinue();
+      if (this.props.gameComplete) {
+        this.props.onComplete();
       } else {
-        this.props.onCheckAnswer();
+        if (this.props.showAnswer) {
+          this.props.onContinue();
+        } else {
+          this.props.onCheckAnswer();
+        }
       }
     }
   }
@@ -78,6 +93,8 @@ class GameAnswerIndicator extends React.Component<GameAnswerIndicatorProps> {
     )
       buttonText = 'Check Answer';
     if (this.props.showAnswer) buttonText = 'Continue';
+    if (this.props.gameComplete) buttonText = 'Play Again';
+
     return (
       <>
         <div
@@ -110,7 +127,11 @@ class GameAnswerIndicator extends React.Component<GameAnswerIndicatorProps> {
             <div className="GameContinueButtonWrapper">
               <button
                 className={`GameContinueButton
-                ${this.props.buttonEnabled ? 'enabled' : ''}
+                ${
+                  this.props.buttonEnabled || this.props.gameComplete
+                    ? 'enabled'
+                    : ''
+                }
                 ${this.props.showAnswer ? 'showAnswer' : ''}
                 ${answerCorrect ? 'answerCorrect' : 'answerWrong'}`}
                 onClick={this.onButtonClick}
