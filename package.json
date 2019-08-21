@@ -62,5 +62,5 @@
       "git add"
     ]
   },
-  "proxy": "http://s3.amazonaws.com/duolingo-data/s3/js2"
+  "proxy": "http://s3.amazonaws.com/duolingo-data/s3/js"
 }
