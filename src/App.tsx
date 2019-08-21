@@ -7,6 +7,7 @@ import logo from './logo.svg';
 import './App.css';
 //containers
 import GameAnswerIndicator from './components/GameAnswerIndicator';
+import GameAudio from './components/GameAudio';
 import CWContainer from './containers/CWContainer';
 import GameProgressContainer from './containers/GameProgressContainer';
 //types
@@ -101,6 +102,23 @@ class App extends React.Component<AppProps, AppInternalState> {
     }, 3000);
   }
 
+  GameComplete() {
+    return (
+      <div className="GameComplete">
+        <img style={{ marginBottom: '20px' }} src="/images/gameComplete.svg" />
+        <h1 style={{ marginBottom: '20px' }}> Lesson Complete! </h1>
+      </div>
+    );
+  }
+
+  CrosswordGame() {
+    return (
+      <div className="GameContainer">
+        <CWContainer />
+      </div>
+    );
+  }
+
   AppContent() {
     return (
       <>
@@ -110,13 +128,12 @@ class App extends React.Component<AppProps, AppInternalState> {
           </div>
         </div>
         <div className="AppBody">
-          <div className="GameContainer">
-            <CWContainer />
-          </div>
+          {this.props.gameComplete ? this.GameComplete() : this.CrosswordGame()}
         </div>
         <div className="Footer">
           <GameAnswerIndicator />
         </div>
+        <GameAudio />
       </>
     );
   }
