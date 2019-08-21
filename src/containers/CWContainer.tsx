@@ -79,13 +79,18 @@ class CWContainer extends React.Component<CWContainerProps, CWContainerState> {
     });
   }
 
-  static getDerivedStateFromProps(props: CWContainerProps, state: AppState) {
+  static getDerivedStateFromProps(
+    props: CWContainerProps,
+    state: AppState
+  ): CWContainerState | null {
     //create a new character grid representation on new game
     if (props.gameIndex != state.gameIndex) {
       return {
         characterGrid: new CharacterGrid(
           props.currentGame.gameData.characterGrid
-        )
+        ),
+        gameIndex: props.gameIndex,
+        currentlySelected: props.currentGame.state.selectedWord
       };
     }
     return null;
