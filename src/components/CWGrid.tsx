@@ -142,7 +142,11 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
     return (
       <div className="CWGridWrapper">
         <div
-          className="CWGrid"
+          className={`CWGrid  ${
+            this.props.wordSelectEnabled
+              ? 'wordSelectEnabled'
+              : 'wordSelectDisabled'
+          }`}
           onMouseUp={this.handleMouseUp}
           onPointerUp={this.handleMouseUp}
           onClick={this.handleMouseUp}
