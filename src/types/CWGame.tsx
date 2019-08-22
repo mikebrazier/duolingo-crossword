@@ -184,8 +184,14 @@ export function clearSelectedWord(state: CWGameState) {
  * @param      {CWGameState}  state     The state
  */
 export function checkSelectedWord(gameData: CWGameData, state: CWGameState) {
+  //try to validate word in its current order
+  let wordValid = wordIsValid(gameData, state.selectedWord);
+  //reverse the order to see if the word was backwards
+  if (!wordValid)
+    wordValid = wordIsValid(gameData, state.selectedWord.reverse());
+
   //if the word is valid
-  if (wordIsValid(gameData, state.selectedWord)) {
+  if (wordValid) {
     state.currentAnswerCorrect = true;
     addWordFound(state, state.selectedWord);
   }
