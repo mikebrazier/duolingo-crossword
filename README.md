@@ -12,6 +12,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Notes
 
+- a demonstration of a game's playthrough has been provided via `'duolingo-final-app-demonstration.mov'`
+
 - API Requests are proxy'd via the `proxy` key defined in package.json. This mitigates requests being denied due to CORS. The `duolingoAPI` module would need to be modified accordingly in production to send reqeusts to an appropriate baseURL.
 
 - `redux-devtools-extension` is imported in `store/index.tsx` it would need to be removed during production.
@@ -61,7 +63,7 @@ After a `CONTINUE_GAME` ACTION, the `CWGameState.selectedWord` field is cleared.
 
 #### 3.) After all targets have been found, the app should display a new grid and source word
 
-Within the reducer's switch statement, `CONTINUE_GAME` contains uses `getWordsRemaining(gameData: CWGameData, state: CWGameState)` from the `CWGame` module for determining if all `CWGame.gameData.targetLocations` have been found.
+Within the reducer's switch statement, `CONTINUE_GAME` uses `getWordsRemaining(gameData: CWGameData, state: CWGameState)` from the `CWGame` module for determining if all `CWGame.gameData.targetLocations` have been found.
 
 If all words for the current game have been found, the `AppState.gameIndex` index is incremented, and the updated state is propogated throughout the application, resulting in the next `CWGame` being rendered as the current game.
 
@@ -82,7 +84,7 @@ If the initial check on `CWGame.state.selectedWord` returns false, `Array.revers
 #### 6.) App must use React and either Typescript or Javascript
 
 Typescript was used throughout the entire codebase, to provide additional typechecking.
-The React framework also used.
+The React framework was also used.
 
 #### 7.) You may bundle the game data inside your app instead of making a network request.
 
@@ -170,7 +172,7 @@ The rendering algorithm, would then execute *L* lookups on each call, with, at w
 Initially the `CWGrid` component was not written to monitor changes in `foundWords` and `selectedWord` between updates.  This could be performed in 
 `getDerivedStateFromProps()`, and local copies of `foundWords` and `selectedWord` could be stored within the component's state.
 
-However, implementing all this increases the complexity and responsibility of the `CWGrid` component, and given the current code, would require additional refactoring and reimplemntation.
+However, implementing all this increases the complexity and responsibility of the `CWGrid` component, and given the current code, would require additional refactoring and reimplementation.
 
 It would be better to remove all `selected` `validated` logic, and for that matter, `findSelectedPoints()` logic into a parent container, and pass all view-related props to a purely presentational `CWGrid` component.
 
@@ -197,21 +199,30 @@ Thus, reimplementing the render algorithm for optimization was not done in the s
 
   - #### Mobile Device UI
 
-        - The site was not tested on any mobile devices, however, Firefox & Chrome's mobile Response Design Mode were used to inspect UI performance for Touch Events.  This revealed that **the grid selection mechanism was effectively broken for TouchEvents**.  A handful of hours were dedicated to using React's onTouch synthetic events, but they were not triggered as anticipated.  Making grid seletion mobile friendly revealed to be a potentially time-consuming, non-critical investment, so **the app should only be expected to work in Desktop browsers running the most recent version of Firefox/Chrome**.
+    - The site was not tested on any mobile devices, however, Firefox & Chrome's mobile Response Design Mode were used to inspect UI performance for Touch Events.  This revealed that **the grid selection mechanism was effectively broken for TouchEvents**.  A handful of hours were dedicated to using React's onTouch synthetic events, but they were not triggered as anticipated.  Making grid seletion mobile friendly revealed to be a potentially time-consuming, non-critical investment, so **the app should only be expected to work in Desktop browsers running the most recent version of Firefox/Chrome**.
 
   - #### Component Resuability
 
-        - Some of the components, such as the ```GameAnswerIndicator``` footer, are tightly coupled to application's design, and contain multiple DOM elements that could be refactored into separate, more generalized components.  The audio files referenced in the ```GameAudio``` component are hard-coded, and the logic for initiating audio playback is derived off the ```currentAnswerCorrect``` state value toggling between ```undefined``` and ```true``` or ```false```.
+    - Some of the components, such as the ```GameAnswerIndicator``` footer, are tightly coupled to application's design, and contain multiple DOM elements that could be refactored into separate, more generalized components.  The audio files referenced in the ```GameAudio``` component are hard-coded, and the logic for initiating audio playback is derived off the ```currentAnswerCorrect``` state value toggling between ```undefined``` and ```true``` or ```false```.
 
-        - As mentioned above, the ```CWGrid``` could be refactored into being an entirely presentational, controlled component.  This could require defining ```selected```, ```validated```, ```findSelectedPoints``` logic in a parent container, and passing props of the ```CWLetter``` components.  ```CWGrid``` was the initial component to receive implementation attention, and refactoring its code was omitted for sake of time.
+    - As mentioned above, the ```CWGrid``` could be refactored into being an entirely presentational, controlled component.  This could require calculating ```selected```, ```validated```, ```findSelectedPoints``` logic in a parent container.  ```CWGrid``` was the initial component to receive implementation attention, and refactoring its code was omitted for sake of time.
 
   - #### Testing
 
-        - Relatively few of the modules were tested.  DOM render testing not was undertaken for components.  This is obviously one of the main drawbacks for maintainability, and typically the additional overhead of testing is not a valid excuse given the risks of untested code.  I caught myself using a sorting function to  compare ```CWWord```s, forgetting the fact that letter order is crucial for determing word equality.
+    - Relatively few of the modules were tested.  DOM render testing not was undertaken for components.  This is obviously one of the main drawbacks for maintainability, and typically the additional overhead of testing is not a valid excuse given the risks of untested code.  I caught myself using a sorting function to  compare ```CWWord```s, forgetting the fact that letter order is crucial for determing word equality.
         Untested code risks are especially relevant for the reducer function, which contains all logic for mutating application state over time.  A single uncaught edge case could render the entire game unplayable.
 
-        - The reducer makes heavy use of the ```CWGame``` module, however its switch statement contains relatively simple logic for responding to game actions.  Because the main game logic is related to the crossword, once the stateless ```CWGameState``` & ```CWGameData``` design was determined, the ```CWGame``` module was provided a test suite to validate crossword functionality.
+    - The reducer makes heavy use of the ```CWGame``` module, however its switch statement contains relatively simple logic for responding to game actions.  Because the main game logic is related to the crossword, once the stateless ```CWGameState``` & ```CWGameData``` design was determined, the ```CWGame``` module was provided a test suite to validate crossword functionality.
 
-        - To improve on the entire source code's quality, test suites would need to be written for full code coverage.  However, this added friction to reaching a working submission quickly.
+    - To improve on the entire source code's quality, test suites would need to be written for full code coverage.  However, this added friction to reaching a working submission quickly.
 
-        - I'm not a fan of "it just works", leaving assumed non-existant bugs hidden, undiscovered, waiting to reveal themselves.  Ultimately, though, through successive playthroughs, I found that the basic functionality had been implemented without any noticeable erroneous behavior.
+    - I'm not a fan of "it just works", leaving assumed non-existant bugs hidden, undiscovered, waiting to reveal themselves.  Ultimately, though, through successive playthroughs, I found that the basic functionality had been implemented without any noticeable erroneous behavior.
+
+## Final Thoughts
+
+  I really enjoyed completing this coding challenge!  I appreciate, and thank, all members of the Duolingo team who have dedicated time to review my submission.  I'm very excited with this opportunity, and hope to continue forward in the interview process!
+
+  Thank you again!
+
+  Best,  
+  Mike Brazier
