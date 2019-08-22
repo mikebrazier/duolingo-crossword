@@ -23,6 +23,8 @@ export type CWWord = Array<CWLetter>;
 /***************************************
  * Functions
  ***************************************/
+
+/* unused 
 function sortsByCoordsThenLetter(word: CWWord) {
   return word.sort((a: CWLetter, b: CWLetter) => {
     if (a.coord.x < b.coord.x) {
@@ -45,6 +47,7 @@ function sortsByCoordsThenLetter(word: CWWord) {
     }
   });
 }
+*/
 
 /**
  * Compares if words are equal, uses sortsByCoordsThenLetter
@@ -56,9 +59,6 @@ function sortsByCoordsThenLetter(word: CWWord) {
 export function wordsAreEqual(wordA: CWWord, wordB: CWWord): boolean {
   //words must be same length
   if (wordA.length !== wordB.length) return false;
-
-  wordA = sortsByCoordsThenLetter(wordA);
-  wordB = sortsByCoordsThenLetter(wordB);
 
   //for every CWLetter
   for (let i = 0; i < wordA.length; ++i) {
