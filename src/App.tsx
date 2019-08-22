@@ -18,7 +18,7 @@ import GameProgressContainer from './containers/GameProgressContainer';
 //types
 import { AppState, appLastGameComplete } from './types/AppState';
 import defaultGamesArray from './types/CWDefaultGameData';
-import { CWGameData, getWordsRemaining } from './types/CWGame';
+import { CWGameData } from './types/CWGame';
 import { loadState } from './types/LocalStorage';
 //actions
 import { receiveGameData, loadAppState } from './actions/';

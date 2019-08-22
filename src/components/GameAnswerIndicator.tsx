@@ -7,7 +7,6 @@
 import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { getWordsRemaining } from './../types/CWGame';
 import { AppState, appLastGameComplete } from './../types/AppState';
 import { continueGame, checkSelection, resetGame } from '../actions/';
 

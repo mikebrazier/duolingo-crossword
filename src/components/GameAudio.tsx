@@ -6,7 +6,6 @@
 
 import React from 'react';
 import { AppState, appLastGameComplete } from './../types/AppState';
-import { getWordsRemaining } from './../types/CWGame';
 import { connect } from 'react-redux';
 
 /***************************************
