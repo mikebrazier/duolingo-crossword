@@ -13,6 +13,7 @@ export function configureStore(preloadedState = initialState) {
   return createStore(
     CWAppReducer,
     preloadedState,
+    //these need to be removed during production
     (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
       (window as any).__REDUX_DEVTOOLS_EXTENSION__()
   );

@@ -7,7 +7,7 @@ import { AppState } from './AppState';
 
 /**
  * Loads a state.  Returns undefined on localStorage.getItem() fail,
- * throws error on JSON.parse() failure
+ * returns undefined on JSON.parse() failure
  *
  * @return     {<type>}  { description_of_the_return_value }
  */

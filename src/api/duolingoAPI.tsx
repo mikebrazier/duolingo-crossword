@@ -36,6 +36,11 @@ function handleErrors(response: Response) {
  * Fetch exports
  ***************************************/
 
+/**
+ * Fetches and parses Array<CWGameData> from Duolingo.
+ * Promise will reject with error if response is not ok!
+ */
+
 export function fetchGames(): Promise<Array<CWGameData>> {
   let headers = new Headers();
 

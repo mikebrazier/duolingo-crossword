@@ -35,10 +35,10 @@ type GameAnswerIndicatorProps = StateProps & DispatchProps & OwnProps;
 
 const mapStateToProps = (state: AppState, ownProps: OwnProps): StateProps => ({
   buttonEnabled:
-    //the current answer has not been checked
+    //a word has been selected but has not yet been checked (CHECK ANSWER)
     (state.games[state.gameIndex].state.selectedWord.length > 0 &&
       state.games[state.gameIndex].state.currentAnswerCorrect === undefined) ||
-    //the current answer has been checked
+    //the current answer has been checked (CONTINUE)
     (state.games[state.gameIndex].state.currentAnswerCorrect === true ||
       state.games[state.gameIndex].state.currentAnswerCorrect === false)
       ? true

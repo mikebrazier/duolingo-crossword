@@ -11,7 +11,7 @@ import Coords from './Coords';
  ***************************************/
 //it is important to associate a letter
 //with its grid coordinates, as incorrect views may otherwise map
-//incorrect characters to incorrect coordinates
+//characters to incorrect coordinates
 export type CWLetter = {
   coord: Coords;
   c: string;

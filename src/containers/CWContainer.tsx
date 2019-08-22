@@ -26,7 +26,7 @@ interface StateProps {
   currentGame: CWGame.CWGame;
   wordSelectEnabled: boolean;
   currentlySelected: CWWord;
-  gameIndex: number;
+  gameIndex: number; //used to determine if the current game has changed
 }
 
 interface DispatchProps {
@@ -38,7 +38,7 @@ type CWContainerProps = StateProps & DispatchProps & OwnProps;
 interface CWContainerState {
   characterGrid: CharacterGrid;
   currentlySelected: CWWord;
-  gameIndex: number;
+  gameIndex: number; //used to determine if the current game has changed
 }
 
 const mapStateToProps = (state: AppState, ownProps: OwnProps): StateProps => ({
@@ -64,7 +64,7 @@ const mapDispatchToProps = (
 
 class CWContainer extends React.Component<CWContainerProps, CWContainerState> {
   readonly state: CWContainerState = {
-    characterGrid: new CharacterGrid([]), //provides view-related
+    characterGrid: new CharacterGrid([]),
     currentlySelected: new Array<CWLetter>(),
     gameIndex: 0
   };

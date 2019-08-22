@@ -14,7 +14,7 @@
  *  CAVEAT: CWGrid is meant to be controlled.  In effect, retain as little state as possible.
  *  This makes switching in-and-out new prop values on the parent-side relatively trivial.
  *  This conversly increases the complexity of implementing the hash table method mentioned
- *  previously within the CWGrid component.  Consider the case where previously found words are removed
+ *  previously WITHIN the CWGrid component.  Consider the case where previously found words are removed
  *  from the foundWords props array, and are replaced with newly found words: CWGrid would have to retain
  *  an internal state for previously validated words, determine which words are no-longer validated,
  *  set each letter's validated property to false, and update the lookup table with the newly found words.
@@ -202,7 +202,7 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
   };
 
   /**
-   * Begin a selection, setting the current selection to current coordinate
+   * Begin a selection, setting the current selection to the coordinate
    *
    * @return     {<type>}  { description_of_the_return_value }
    */
@@ -259,8 +259,7 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
                 //determine if the current letter is within calculated
                 //best line/diagonal selection
 
-                //NOTE: THIS FIND-ALG IS EVALUATED FOR EVERY LETTER IN THE GRID
-                //MAY BE OPTIMIZED WITH A LOOKUP TABLE
+                //NOTE: see optimization discussion in file header
                 if (
                   this.props.currentlySelected.some((letter: CWLetter) => {
                     let coord = letter.coord;
@@ -270,9 +269,7 @@ class CWGrid extends React.Component<CWGridProps, CWGridState> {
                   _selected = true;
                 }
 
-                //determine if the current letter is within a found word
-                //NOTE: THIS FIND-ALG IS EVALUATED FOR EVERY LETTER IN THE GRID
-                //MAY BE OPTIMIZED WITH A LOOKUP TABLE
+                //NOTE: see optimization discussion in file header
                 for (let i = 0; i < this.props.foundWords.length; ++i) {
                   let word = this.props.foundWords[i];
                   if (
