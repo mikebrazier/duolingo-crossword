@@ -136,7 +136,7 @@ function addWordFound(state: CWGameState, word: CWWord) {
 }
 
 /**
- * Checks if a given word has been found within the state.foundWOrds
+ * Checks if a given word has been found within the state.foundWords
  *
  * @param      {CWGameState}  state   The state
  * @param      {CWWord}       word    The word

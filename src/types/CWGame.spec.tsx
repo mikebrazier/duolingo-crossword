@@ -91,6 +91,23 @@ describe('CWGame', () => {
     expect(TestGame.state.selectedWord).toEqual(CWGameValidWord1);
   });
 
+  it('should set currentAnswerCorrect on valid word', () => {
+    expect(TestGame.state.foundWords.length).toBeFalsy();
+    CWGame.setSelectedWord(TestGame.state, CWGameValidWord1);
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
+    expect(TestGame.state.currentAnswerCorrect).toBeTruthy();
+  });
+
+  it('should set currentAnswerCorrect on reversed word', () => {
+    expect(TestGame.state.foundWords.length).toBeFalsy();
+    CWGame.setSelectedWord(
+      TestGame.state,
+      cloneDeep(CWGameValidWord1).reverse()
+    );
+    CWGame.checkSelectedWord(TestGame.gameData, TestGame.state); //word now found
+    expect(TestGame.state.currentAnswerCorrect).toBeTruthy();
+  });
+
   it('should update found words on valid word', () => {
     expect(TestGame.state.foundWords.length).toBeFalsy();
     CWGame.setSelectedWord(TestGame.state, CWGameValidWord1);
